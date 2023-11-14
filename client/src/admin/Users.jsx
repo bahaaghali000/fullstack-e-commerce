@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 const Users = () => {
   const { currentUser, loading: isLoading } = useAuth();
   const { data: users, loading } = useGetData(
-    "http://localhost:3000/api/user/all-users"
+    "https://multimart-ecommerce-hr2c.onrender.com//api/user/all-users"
   );
 
   const [data, setData] = useState(users);
@@ -23,11 +23,14 @@ const Users = () => {
   const handleDelete = async (id) => {
     console.log(id);
     try {
-      await axios.delete(`http://localhost:3000/api/user/${id}`, {
-        headers: {
-          Authorization: "Bearer " + currentUser.token,
-        },
-      });
+      await axios.delete(
+        `https://multimart-ecommerce-hr2c.onrender.com//api/user/${id}`,
+        {
+          headers: {
+            Authorization: "Bearer " + currentUser.token,
+          },
+        }
+      );
 
       toast.success("User Deleted successfully");
       window.location.reload();

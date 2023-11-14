@@ -4,10 +4,10 @@ import useGetData from "../hooks/useGetData";
 
 const Dashboard = () => {
   const { data: products } = useGetData(
-    "http://localhost:3000/api/products/all-products"
+    "https://multimart-ecommerce-hr2c.onrender.com//api/products/all-products"
   );
   const { data: users } = useGetData(
-    "http://localhost:3000/api/user/all-users"
+    "https://multimart-ecommerce-hr2c.onrender.com//api/user/all-users"
   );
 
   const formatter = Intl.NumberFormat("en", {

@@ -22,10 +22,13 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:3000/api/user/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://multimart-ecommerce-hr2c.onrender.com//api/user/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (res.data.status === "fail") {
         setIsLoading(false);

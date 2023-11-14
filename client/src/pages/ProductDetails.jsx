@@ -31,7 +31,7 @@ const ProductDetails = () => {
   const { currentUser } = useAuth();
 
   const { data: products, loading } = useGetData(
-    "http://localhost:3000/api/products/all-products"
+    "https://multimart-ecommerce-hr2c.onrender.com//api/products/all-products"
   );
 
   const relatedProducts = products.filter(
@@ -42,7 +42,7 @@ const ProductDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/products/${id}`)
+      .get(`https://multimart-ecommerce-hr2c.onrender.com//api/products/${id}`)
       .then((data) => setProduct(data.data.data));
   }, [id]);
 

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const AllProducts = ({ searchValue }) => {
   const { data: productsData, loading } = useGetData(
-    "http://localhost:3000/api/products/all-products"
+    "https://multimart-ecommerce-hr2c.onrender.com//api/products/all-products"
   );
   const [data, setData] = useState(productsData);
 
@@ -37,7 +37,9 @@ const AllProducts = ({ searchValue }) => {
   }, [searchValue]);
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:3000/api/products/${id}`);
+    await axios.delete(
+      `https://multimart-ecommerce-hr2c.onrender.com//api/products/${id}`
+    );
     toast.success("product is deleted successfully");
     window.location.reload();
   };
@@ -45,7 +47,7 @@ const AllProducts = ({ searchValue }) => {
   const handleEdit = async (id) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/api/products/${id}`
+        `https://multimart-ecommerce-hr2c.onrender.com//api/products/${id}`
       );
       navigate("/dashboard/add-product");
       dispatch(setProduct(data.data));

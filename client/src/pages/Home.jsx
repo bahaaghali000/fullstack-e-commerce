@@ -13,7 +13,7 @@ import useGetData from "../hooks/useGetData";
 
 const Home = () => {
   const { data: products, loading } = useGetData(
-    "http://localhost:3000/api/products/all-products"
+    "https://multimart-ecommerce-hr2c.onrender.com//api/products/all-products"
   );
 
   const [bestSales, setBestSales] = useState([]);
