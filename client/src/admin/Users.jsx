@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 const Users = () => {
   const { currentUser, loading: isLoading } = useAuth();
   const { data: users, loading } = useGetData(
-    "https://multimart-ecommerce-hr2c.onrender.com//api/user/all-users"
+    "https://multimart-ecommerce-hr2c.onrender.com/api/user/all-users"
   );
 
   const [data, setData] = useState(users);
@@ -24,7 +24,7 @@ const Users = () => {
     console.log(id);
     try {
       await axios.delete(
-        `https://multimart-ecommerce-hr2c.onrender.com//api/user/${id}`,
+        `https://multimart-ecommerce-hr2c.onrender.com/api/user/${id}`,
         {
           headers: {
             Authorization: "Bearer " + currentUser.token,

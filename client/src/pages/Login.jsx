@@ -23,7 +23,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "https://multimart-ecommerce-hr2c.onrender.com//api/user/login",
+        "https://multimart-ecommerce-hr2c.onrender.com/api/user/login",
         {
           email,
           password,

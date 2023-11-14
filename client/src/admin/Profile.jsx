@@ -40,7 +40,7 @@ const Profile = () => {
 
     try {
       const { data } = await axios.put(
-        `https://multimart-ecommerce-hr2c.onrender.com//api/user/${currentUser._id}`,
+        `https://multimart-ecommerce-hr2c.onrender.com/api/user/${currentUser._id}`,
         {
           username: enterName || "",
           city: enterCity || "",
@@ -63,7 +63,7 @@ const Profile = () => {
     const base64 = await convertToBase64(e.target.files[0]);
 
     const { data } = await axios.put(
-      `https://multimart-ecommerce-hr2c.onrender.com//api/user/${currentUser._id}`,
+      `https://multimart-ecommerce-hr2c.onrender.com/api/user/${currentUser._id}`,
       {
         profilePic: base64,
       }

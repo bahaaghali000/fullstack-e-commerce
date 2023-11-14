@@ -8,7 +8,7 @@ import useGetData from "../hooks/useGetData";
 
 const Shop = () => {
   const { data: productsData, loading } = useGetData(
-    "https://multimart-ecommerce-hr2c.onrender.com//api/products/all-products"
+    "https://multimart-ecommerce-hr2c.onrender.com/api/products/all-products"
   );
 
   const [products, setProducts] = useState(productsData);

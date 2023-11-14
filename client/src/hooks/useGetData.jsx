@@ -11,15 +11,15 @@ const useGetData = (url) => {
     const fetchAllProducts = async () => {
       const { data } = await axios.get(url, {
         headers: {
-          Authorization: "Bearer " + currentUser.token,
+          Authorization: currentUser ? "Bearer " + currentUser.token : null,
         },
       });
       setData(data.data);
       setLoading(false);
     };
 
-    !isLoading && fetchAllProducts();
-  }, [currentUser]);
+    fetchAllProducts();
+  }, [currentUser, isLoading]);
 
   return { data, loading };
 };

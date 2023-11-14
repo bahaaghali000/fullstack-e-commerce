@@ -26,7 +26,7 @@ const Signup = () => {
     setIsLoading(true);
 
     const { data } = await axios.post(
-      "https://multimart-ecommerce-hr2c.onrender.com//api/user/regesiter",
+      "https://multimart-ecommerce-hr2c.onrender.com/api/user/regesiter",
       {
         username,
         email,

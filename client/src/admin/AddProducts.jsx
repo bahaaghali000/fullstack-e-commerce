@@ -54,7 +54,7 @@ const AddProducts = ({ mood }) => {
       if (!loading) {
         if (!prodcutToUpdate) {
           await axios.post(
-            "https://multimart-ecommerce-hr2c.onrender.com//api/products/create-product",
+            "https://multimart-ecommerce-hr2c.onrender.com/api/products/create-product",
             {
               category: enterCategory,
               description: enterDescription,
@@ -71,7 +71,7 @@ const AddProducts = ({ mood }) => {
         } else {
           console.log("this condition 2");
           await axios.put(
-            `https://multimart-ecommerce-hr2c.onrender.com//api/products/${prodcutToUpdate._id}`,
+            `https://multimart-ecommerce-hr2c.onrender.com/api/products/${prodcutToUpdate._id}`,
             {
               category: enterCategory,
               description: enterDescription,
