@@ -149,11 +149,7 @@ const Home = () => {
               <ProductsList data={mobilesProducts} />
             )}
 
-            {loading ? (
-              <h5 className="fw-bold">Loading....</h5>
-            ) : (
-              <ProductsList data={wirelessProducts} />
-            )}
+            {loading ? <h5></h5> : <ProductsList data={wirelessProducts} />}
           </Row>
         </Container>
       </section>

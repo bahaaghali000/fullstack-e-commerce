@@ -11,16 +11,12 @@ const createUser = async (req, res) => {
 
   try {
     const isExist = await User.findOne({ email: email });
+
     if (isExist) {
       return res.status(400).json({ msg: "User is already exists!" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await User.create({
-      username,
-      email,
-      password: hashedPassword,
-    });
+    const newUser = await User.create(req.body);
 
     const token = generateToken(newUser._id);
 
@@ -127,7 +123,7 @@ const deleteUser = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(userId);
 
-    if (!deleteUser) {
+    if (!deletedUser) {
       return res.status(400).json({ msg: "User doesn't exsit" });
     }
     res.status(200).json({ msg: "user deleted successfully" });
