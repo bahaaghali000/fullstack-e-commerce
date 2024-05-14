@@ -32,7 +32,7 @@ const Login = () => {
   }, [token]);
 
   const signInWithGoogle = async () => {
-    window.open("http://localhost:3000/auth/google", "_self");
+    window.open(`${import.meta.env.VITE_API_BASE_URL}/auth/google`, "_self");
   };
 
   return (

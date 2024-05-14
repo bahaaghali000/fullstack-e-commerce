@@ -11,8 +11,8 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:5173/",
-    failureRedirect: "http://localhost:5173/login",
+    successRedirect: process.env.FRONTEND_BASE_URL,
+    failureRedirect: process.env.FRONTEND_LOGIN_URL,
   })
 );
 
@@ -22,7 +22,7 @@ router.get("/logout", (req, res) => {
     if (err) {
       return next(err);
     }
-    res.redirect("http://localhost:5173");
+    res.redirect(process.env.FRONTEND_BASE_URL);
   });
 });
 

@@ -51,7 +51,7 @@ const AdminNav = ({ searchValue }) => {
   }, []);
 
   const handleLogout = () => {
-    window.open("http://localhost:3000/auth/logout", "_self");
+    window.open(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, "_self");
     dispatch(logout(undefined));
   };
 
