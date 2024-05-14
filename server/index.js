@@ -37,7 +37,6 @@ app.use(
     saveUninitialized: true,
     cookie: {
       sameSite: "none",
-      maxAge: process.env.COOKIE_MAXAGE,
       secure: process.env.COOKIE_SECURE,
     },
   })
