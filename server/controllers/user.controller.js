@@ -28,6 +28,7 @@ const createUser = asyncErrorHandler(async (req, res) => {
   const token = generateToken(newUser._id);
 
   res.cookie("access_token", token, {
+    sameSite: 'none',
     maxAge: process.env.COOKIE_MAXAGE,
     secure: process.env.COOKIE_SECURE,
     httpOnly: true,
@@ -62,6 +63,7 @@ const login = asyncErrorHandler(async (req, res) => {
   if (user && decodedPassword) {
     user.password = undefined;
     res.cookie("access_token", token, {
+      sameSite: 'none',
       maxAge: process.env.COOKIE_MAXAGE,
       secure: process.env.COOKIE_SECURE,
       httpOnly: true,
