@@ -72,7 +72,7 @@ const Signup = () => {
                   />
                 </FormGroup>
 
-                <FormGroup>
+                {/* <FormGroup>
                   <button
                     type="button"
                     onClick={signUpWithGoogle}
@@ -84,7 +84,7 @@ const Signup = () => {
                     />{" "}
                     Continue With Google
                   </button>
-                </FormGroup>
+                </FormGroup> */}
 
                 <button className="buy__btn auth__btn mb-3">
                   Create an Account
