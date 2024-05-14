@@ -1,14 +1,20 @@
 import { Container, Row, Col } from "reactstrap";
 import "../styles/dashboard.css";
-import useGetData from "../hooks/useGetData";
+import useGetUsers from "../hooks/useGetUsers";
+import useFilterProducts from "../hooks/useFilterProducts";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
-  const { data: products } = useGetData(
-    "https://multimart-ecommerce-hr2c.onrender.com/api/products/all-products"
-  );
-  const { data: users } = useGetData(
-    "https://multimart-ecommerce-hr2c.onrender.com/api/user/all-users"
-  );
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+
+  const { fetchUsers } = useGetUsers();
+  const { fetchProducts } = useFilterProducts();
+
+  useEffect(() => {
+    fetchUsers("").then((data) => setTotalUsers(data.length));
+    fetchProducts("", "").then((data) => setTotalProducts(data.length));
+  }, []);
 
   const formatter = Intl.NumberFormat("en", {
     notation: "compact",
@@ -33,13 +39,13 @@ const Dashboard = () => {
           <Col lg="3" md="6" sm="6" className=" mb-3">
             <div className="products__box">
               <h5>Total Products</h5>
-              <span>{formatter.format(products.length)}</span>
+              <span>{totalProducts}</span>
             </div>
           </Col>
           <Col lg="3" md="6" sm="6" className=" mb-3">
             <div className="users__box">
               <h5>Total Users</h5>
-              <span>{users.length > 0 ? users.length : 0}</span>
+              <span>{totalUsers}</span>
             </div>
           </Col>
         </Row>

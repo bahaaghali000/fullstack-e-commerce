@@ -1,8 +1,9 @@
 import { Container, Row } from "reactstrap";
 import "../styles/admin-nav.css";
-import useAuth from "../hooks/useAuth";
 import { NavLink, useNavigate, Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { motion } from "framer-motion";
 
 const admin__nav = [
   {
@@ -28,7 +29,8 @@ const admin__nav = [
 ];
 
 const AdminNav = ({ searchValue }) => {
-  const { currentUser } = useAuth();
+  const { user } = useSelector((state) => state.auth);
+  const [showProfileActions, setShowProfileActions] = useState(false);
 
   const navigate = useNavigate();
 
@@ -36,25 +38,25 @@ const AdminNav = ({ searchValue }) => {
     navigate("/dashboard/all-products");
     searchValue(e.target.value);
   };
-  const profileActionsRef = useRef(null);
 
-  const toggleProfileActions = () => {
-    profileActionsRef.current.classList.toggle("show__profile-actions");
+  const handleClickOutSide = () => {
+    setShowProfileActions(false);
   };
 
   useEffect(() => {
+    document.addEventListener("click", handleClickOutSide);
     return () => {
-      profileActionsRef.current?.classList.remove("show__profile-actions");
+      document.removeEventListener("click", handleClickOutSide);
     };
-  });
+  }, []);
 
-  const logout = () => {
-    localStorage.removeItem("multiUser");
-    navigate("/login");
-    window.location.reload();
+  const handleLogout = () => {
+    window.open("http://localhost:3000/auth/logout", "_self");
+    dispatch(logout(undefined));
   };
+
   return (
-    <>
+    <div>
       <header className="admin__header">
         <div className="admin__nav-top">
           <Container>
@@ -75,23 +77,29 @@ const AdminNav = ({ searchValue }) => {
               </div>
 
               <div className="admin__nav-top-right">
-                <img
+                <motion.img
                   className="profile__picture"
-                  onClick={toggleProfileActions}
-                  src={currentUser && currentUser.profilePic}
+                  whileTap={{ scale: 1.2 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowProfileActions(!showProfileActions);
+                  }}
+                  src={user && user.profilePic}
                   alt="Profile Picture"
                 />
-                <div className="profile__actions" ref={profileActionsRef}>
-                  <div className="d-flex flex-column align-items-center justify-content-center ">
-                    <Link to="/home" className="text-dark">
-                      Home
-                    </Link>
-                    <Link to="/profile" className="text-dark">
-                      Profile
-                    </Link>
-                    <span onClick={logout}>Logout</span>
+                {showProfileActions && (
+                  <div className="profile__actions">
+                    <div className="d-flex flex-column align-items-center justify-content-center ">
+                      <Link to="/home" className="text-dark">
+                        Home
+                      </Link>
+                      <Link to="/profile" className="text-dark">
+                        Profile
+                      </Link>
+                      <span onClick={handleLogout}>Logout</span>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </Container>
@@ -120,7 +128,7 @@ const AdminNav = ({ searchValue }) => {
           </Row>
         </Container>
       </section>
-    </>
+    </div>
   );
 };
 

@@ -1,28 +1,37 @@
-.auth__form{
-    background: var(--primary-color);
-    padding: 40px;
-    padding-bottom: 10px;
-    border-radius: 5px;
+.auth__form {
+  background: var(--primary-color);
+  padding: 40px;
+  padding-bottom: 10px;
+  border-radius: 5px;
 }
 .auth__form input {
-    width: 100%;
+  width: 100%;
+  font-size: 1rem;
+}
+.form__group {
+  border: 1px solid var(--card-bg-02);
 }
 
-.signup__google{
-    margin: 30px auto 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fff;
-    padding: 10px;
-    gap: 10px;
-    cursor: pointer;
-    width: max-content;
-    text-align: center;
-    border-radius: 5px;
+.signup__google {
+  margin: 30px auto 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  padding: 10px;
+  gap: 10px;
+  cursor: pointer;
+  width: max-content;
+  text-align: center;
+  border-radius: 5px;
+  border: none;
 }
 
-.signup__google img{
-    width: 24px;
-    height: 24px;
+.signup__google img {
+  width: 24px;
+  height: 24px;
+}
+
+.forgot_password {
+  text-align: right;
 }

@@ -5,8 +5,8 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import logo from "../../assets/images/eco-logo.png";
 import userIcon from "../../assets/images/user-icon.png";
-import { useSelector } from "react-redux";
-import useAuth from "../../hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/slices/authSlice";
 
 const nav__links = [
   {
@@ -29,45 +29,43 @@ const nav__links = [
 const Header = () => {
   const { totalQuantity } = useSelector((state) => state.cart);
   const { totalFav } = useSelector((state) => state.fav);
+  const { user, token } = useSelector((state) => state.auth);
 
-  const { currentUser, loading } = useAuth();
+  const [showProfileActions, setShowProfileActions] = useState(false);
+
+  const dispatch = useDispatch();
 
   const headerRef = useRef(null);
   const menuRef = useRef(null);
-  const profileActionsRef = useRef(null);
 
   const navigate = useNavigate();
 
-  const stickyHeaderFn = () => {
-    window.addEventListener("scroll", () => {
-      if (document.documentElement.scrollTop > 80) {
-        headerRef.current.classList.add("sticky__header");
-      } else {
-        headerRef.current.classList.remove("sticky__header");
-      }
-    });
+  const handleScroll = () => {
+    if (document.documentElement.scrollTop > 80) {
+      headerRef.current.classList.add("sticky__header");
+    } else {
+      headerRef.current.classList.remove("sticky__header");
+    }
+  };
+
+  const handleClickOutSide = () => {
+    setShowProfileActions(false);
   };
 
   useEffect(() => {
-    stickyHeaderFn();
-  });
+    window.addEventListener("scroll", handleScroll);
+    document.addEventListener("click", handleClickOutSide);
+    return () => {
+      document.removeEventListener("click", handleClickOutSide);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const menuToggle = () => menuRef.current.classList.toggle("active__menu");
 
-  const toggleProfileActions = () => {
-    profileActionsRef.current.classList.toggle("show__profile-actions");
-  };
-
-  useEffect(() => {
-    return () => {
-      profileActionsRef.current?.classList.remove("show__profile-actions");
-    };
-  });
-
-  const logout = () => {
-    localStorage.removeItem("multiUser");
-    navigate("/login");
-    window.location.reload();
+  const handleLogout = () => {
+    window.open("http://localhost:3000/auth/logout", "_self");
+    dispatch(logout(undefined));
   };
 
   return (
@@ -115,33 +113,38 @@ const Header = () => {
               <div className="profile">
                 <motion.img
                   className="profile__picture"
-                  onClick={toggleProfileActions}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowProfileActions(!showProfileActions);
+                  }}
                   whileTap={{ scale: 1.2 }}
-                  src={currentUser ? currentUser.profilePic : userIcon}
-                  alt="user image"
+                  src={token ? user.profilePic : userIcon}
+                  alt="Profile Picture"
                 />
-                <div className="profile__actions" ref={profileActionsRef}>
-                  {currentUser ? (
-                    <div className="d-flex flex-column align-items-center justify-content-center ">
-                      <Link to="/dashboard" className="text-dark">
-                        Dashboard
-                      </Link>
-                      <Link to="/profile" className="text-dark">
-                        Profile
-                      </Link>
-                      <span onClick={logout}>Logout</span>
-                    </div>
-                  ) : (
-                    <div className="d-flex flex-column align-items-center justify-content-center ">
-                      <Link to="/signup" className="text-dark">
-                        Sign up
-                      </Link>
-                      <Link to="/login" className="text-dark">
-                        Login
-                      </Link>
-                    </div>
-                  )}
-                </div>
+                {showProfileActions && (
+                  <div className="profile__actions">
+                    {token ? (
+                      <div className="d-flex flex-column align-items-center justify-content-center ">
+                        <Link to="/dashboard" className="text-dark">
+                          Dashboard
+                        </Link>
+                        <Link to="/profile" className="text-dark">
+                          Profile
+                        </Link>
+                        <span onClick={handleLogout}>Logout</span>
+                      </div>
+                    ) : (
+                      <div className="d-flex flex-column align-items-center justify-content-center ">
+                        <Link to="/signup" className="text-dark">
+                          Sign up
+                        </Link>
+                        <Link to="/login" className="text-dark">
+                          Login
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="mobile__menu">
                 <span onClick={menuToggle}>

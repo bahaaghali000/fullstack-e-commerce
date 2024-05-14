@@ -6,3 +6,9 @@ tr img{
 .table__content td span {
     cursor: pointer;
 }
+.cart__skeleton{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+}

@@ -1,44 +1,31 @@
 import { Col, Container, Row } from "reactstrap";
 import { toast } from "react-toastify";
 import axios from "axios";
-import useAuth from "../hooks/useAuth";
-import useGetData from "../hooks/useGetData";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import useGetUsers from "../hooks/useGetUsers";
+import Skeleton from "react-loading-skeleton";
 
 const Users = () => {
-  const { currentUser, loading: isLoading } = useAuth();
-  const { data: users, loading } = useGetData(
-    "https://multimart-ecommerce-hr2c.onrender.com/api/user/all-users"
-  );
-
-  const [data, setData] = useState(users);
+  const { loading, fetchUsers } = useGetUsers();
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData(
-      users.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-    );
-  }, [users]);
+    fetchUsers("").then((data) => setData(data));
+  }, []);
 
   const handleDelete = async (id) => {
-    console.log(id);
+    const loadingToast = toast.loading("Loading...");
     try {
-      await axios.delete(
-        `https://multimart-ecommerce-hr2c.onrender.com/api/user/${id}`,
-        {
-          headers: {
-            Authorization: "Bearer " + currentUser.token,
-          },
-        }
-      );
+      await axios.delete(`/api/user/${id}`);
 
+      setData((prev) => prev.filter((user) => user._id !== id));
       toast.success("User Deleted successfully");
-      window.location.reload();
-
-      // check if i the user whoose deleted remove from localStorage
-      currentUser._id === id ? localStorage.removeItem("multiUser") : null;
     } catch (error) {
+      console.log(error);
       toast.error("Something went wroung");
+    } finally {
+      toast.dismiss(loadingToast);
     }
   };
 
@@ -51,7 +38,17 @@ const Users = () => {
           </Col>
           <Col lg="12" md="12" sm="6" className="text-center pt-5">
             {loading ? (
-              <h2 className="text-center">Loading....</h2>
+              [...Array(7)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className=" d-flex justify-content-between  align-items-center mb-3"
+                >
+                  <Skeleton width={60} height={60} circle className=" mx-5 " />
+                  <Skeleton width={200} />
+                  <Skeleton width={200} />
+                  <Skeleton width={80} className=" mx-5 " />
+                </div>
+              ))
             ) : (
               <>
                 <table className="table">
@@ -71,7 +68,7 @@ const Users = () => {
                             <img
                               className="users__img"
                               src={user.profilePic}
-                              alt=""
+                              alt={user.username}
                             />
                           </td>
                           <td>{user.username}</td>

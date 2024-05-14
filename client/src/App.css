@@ -23,7 +23,6 @@
 
 body {
   font-family: "Montserrat", sans-serif;
-  
 }
 
 h1,
@@ -41,7 +40,17 @@ p {
   color: var(--small-text-color);
   font-size: 1rem;
 }
-
+input,
+button,
+select,
+optgroup,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  outline: none;
+}
 h1,
 h2 {
   font-size: var(--heading-fontSize);
@@ -53,46 +62,110 @@ ul {
 
 a {
   text-decoration: none !important;
-  color: unset;
+  /* color: unset; */
 }
-img{
+img {
   width: 100%;
 }
-section{
+section {
   padding: 60px 0px;
 }
-.section__title{
+.section__title {
   color: var(--primary-color);
   font-weight: 600 !important;
 }
-
-
-.slide-left {
-	-webkit-animation: slide-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-  animation: slide-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+.search__box,
+.form__group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  overflow: hidden;
+  padding-left: 2px;
+  padding-right: 12px;
 }
 
+.auth__btn {
+  background-color: #fff !important;
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
 
+input,
+.review__form textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 10px;
+}
+
+#root {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.buy__btn {
+  border: none;
+  outline: none;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 5px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  margin-top: 30px;
+  transition: 0.3s;
+}
+.buy__btn a {
+  color: #fff;
+}
+
+.slide-left {
+  -webkit-animation: slide-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: slide-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.loading__page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 999999999;
+}
 
 @-webkit-keyframes slide-left {
   0% {
     -webkit-transform: translateX(150px);
-            transform: translateX(150px);
+    transform: translateX(150px);
   }
   100% {
     -webkit-transform: translateX(0);
-            transform: translateX(0);
+    transform: translateX(0);
   }
 }
 @keyframes slide-left {
   0% {
     -webkit-transform: translateX(150px);
-            transform: translateX(150px);
+    transform: translateX(150px);
   }
   100% {
     -webkit-transform: translateX(0);
-            transform: translateX(0);
+    transform: translateX(0);
   }
 }
 
-
+@media screen and (max-width: 576px) {
+  .buy__btn {
+    margin-top: 10px;
+  }
+  .buy__btn {
+    font-size: 0.9rem;
+  }
+}

@@ -1,14 +1,14 @@
-import React from "react";
-import useAuth from "../hooks/useAuth";
-
+import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
+import { NotFound } from "../pages";
 
-const ProtectedRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem("multiUser"));
-  if (!user) {
-    return <Navigate to="/login" />;
+const ProtectedRoute = () => {
+  const { token } = useSelector((state) => state.auth);
+
+  if (token) {
+    return <Outlet />;
   }
-  return <Outlet />;
+  return <NotFound />;
 };
 
 export default ProtectedRoute;

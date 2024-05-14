@@ -1,9 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+export const fetchCart = createAsyncThunk("/cart/fetch", async () => {
+  const { data } = await axios.get(`/api/cart/get`);
+  return data.data;
+});
 
 const initialState = {
   cartItems: [],
   totalAmount: 0,
   totalQuantity: 0,
+  loading: false,
+  error: null,
 };
 
 const cartSlice = createSlice({
@@ -13,29 +21,31 @@ const cartSlice = createSlice({
     addItem: (state, action) => {
       const newItem = action.payload;
       const exsitingItem = state.cartItems.find(
-        (item) => item.id === newItem.id
+        (item) => item.product._id === newItem._id
       );
-      state.totalQuantity++;
+
       if (!exsitingItem) {
         state.cartItems.push({
-          id: newItem.id,
-          productName: newItem.productName,
-          imgUrl: newItem.imgUrl,
-          price: newItem.price,
+          product: {
+            _id: newItem._id,
+            productName: newItem.productName,
+            imgUrl: newItem.imgUrl,
+            price: newItem.price,
+            category: newItem.category,
+          },
           quantity: 1,
-          totalPrice: newItem.price,
         });
 
+        state.totalQuantity++;
         state.totalAmount = state.cartItems.reduce(
-          (total, item) => total + +item.price * +item.quantity,
+          (total, item) => total + +item.product.price * +item.quantity,
           0
         );
       } else {
         exsitingItem.quantity++;
-        exsitingItem.totalPrice = +exsitingItem.totalPrice + +newItem.price;
 
         state.totalAmount = state.cartItems.reduce(
-          (total, item) => total + +item.price * +item.quantity,
+          (total, item) => total + +item.product.price * +item.quantity,
           0
         );
       }
@@ -43,17 +53,39 @@ const cartSlice = createSlice({
 
     deleteItem: (state, action) => {
       const id = action.payload;
-      const existingItem = state.cartItems.find((item) => item.id === id);
+      const existingItem = state.cartItems.find(
+        (item) => item.product._id === id
+      );
       if (existingItem) {
-        state.cartItems = state.cartItems.filter((item) => item.id !== id);
-        state.totalQuantity = state.totalQuantity - existingItem.quantity;
+        state.cartItems = state.cartItems.filter(
+          (item) => item.product._id !== id
+        );
+        state.totalQuantity = state.totalQuantity - 1;
 
         state.totalAmount = state.cartItems.reduce(
-          (total, item) => total + +item.price * +item.quantity,
+          (total, item) => total + +item.product.price * +item.quantity,
           0
         );
       }
     },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.cartItems = action.payload.items || [];
+        state.totalAmount = action.payload.totalAmount || 0;
+        state.totalQuantity = action.payload.totalQuantity || 0;
+      })
+      .addCase(fetchCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 

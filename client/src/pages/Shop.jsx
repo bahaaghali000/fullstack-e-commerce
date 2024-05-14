@@ -4,60 +4,33 @@ import CommonSection from "../Components/UI/CommonSection";
 import "../styles/shop.css";
 import { useEffect, useState } from "react";
 import ProductsList from "../Components/UI/ProductsList";
-import useGetData from "../hooks/useGetData";
+import useFilterProducts from "../hooks/useFilterProducts";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../redux/slices/productsSlice";
+import ProductSkeleton from "../Components/skeletons/ProductSkeleton";
 
 const Shop = () => {
-  const { data: productsData, loading } = useGetData(
-    "https://multimart-ecommerce-hr2c.onrender.com/api/products/all-products"
-  );
-
-  const [products, setProducts] = useState(productsData);
+  const [search, setSearch] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
   const [sorting, setSorting] = useState("");
 
-  useEffect(() => {
-    setProducts(productsData);
-  }, [productsData]);
-
-  const handleFilter = (e) => {
-    const filterValue = e.target.value;
-
-    if (filterValue) {
-      const filteredProducts = productsData.filter(
-        (product) => product.category === filterValue
-      );
-
-      setProducts(filteredProducts);
-    } else {
-      setProducts(productsData);
-    }
-  };
+  const { fetchProducts } = useFilterProducts();
 
   useEffect(() => {
-    if (sorting === "ascending") {
-      const sortedProducts = productsData.sort((a, b) => a.price - b.price);
-      setProducts(sortedProducts);
-    } else if (sorting === "descending") {
-      const sortedProducts = productsData.sort((a, b) => b.price - a.price);
-      setProducts(sortedProducts);
-    } else {
-      setProducts(productsData);
-    }
-  }, [sorting]);
+    setLoading(true);
+    let timeout;
+    timeout = setTimeout(async () => {
+      const data = await fetchProducts(search, filterValue, sorting);
+      setLoading(false);
+      setProducts(data);
+    }, 1000);
 
-  const handleSearch = (e) => {
-    const searchValue = e.target.value;
-
-    if (searchValue) {
-      const searchResult = productsData.filter((product) => {
-        return product.productName
-          .toLowerCase()
-          .includes(searchValue.toLowerCase());
-      });
-      setProducts(searchResult);
-    } else {
-      setProducts(productsData);
-    }
-  };
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [search, filterValue, sorting]);
 
   return (
     <Helmet title="Shop">
@@ -67,7 +40,10 @@ const Shop = () => {
         <Container>
           <Row>
             <Col lg="3" md="6" sm="6">
-              <select onChange={handleFilter}>
+              <select
+                onChange={(e) => setFilterValue(e.target.value)}
+                value={filterValue}
+              >
                 <option value="">Filter By Category</option>
                 <option value="sofa">Sofa</option>
                 <option value="mobile">Mobile</option>
@@ -81,7 +57,7 @@ const Shop = () => {
               <select onChange={(e) => setSorting(e.target.value)}>
                 <option value="none">Sort By</option>
                 <option value="ascending">Ascending</option>
-                <option value="descending">Descending</option>
+                <option value="p">Descending</option>
               </select>
             </Col>
 
@@ -89,7 +65,8 @@ const Shop = () => {
               <div className="search__box">
                 <input
                   type="text"
-                  onChange={handleSearch}
+                  onChange={(e) => setSearch(e.target.value)}
+                  value={search}
                   placeholder="Search...."
                 />
                 <span>
@@ -105,15 +82,11 @@ const Shop = () => {
         <Container>
           <Row className=" align-items-end ">
             {loading ? (
-              <h5 className="fw-bold">Loading....</h5>
+              [...Array(10)].map((_, index) => <ProductSkeleton key={index} />)
+            ) : products?.length > 0 ? (
+              <ProductsList data={products} />
             ) : (
-              <>
-                {products.length > 0 ? (
-                  <ProductsList data={products} />
-                ) : (
-                  <h1 className="text-center fs-4">No Products Are Found</h1>
-                )}
-              </>
+              <h1 className="text-center fs-4">No Products Are Found</h1>
             )}
           </Row>
         </Container>

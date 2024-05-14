@@ -1,9 +1,13 @@
 import "./footer.css";
 import { Container, Row, Col, ListGroup, ListGroupItem } from "reactstrap";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Footer = () => {
   const year = new Date().getFullYear();
+
+  const { token } = useSelector((state) => state.auth);
+
   return (
     <footer>
       <Container>
@@ -56,7 +60,11 @@ const Footer = () => {
                 </ListGroupItem>
 
                 <ListGroupItem className="p-0 border-0 mb-3">
-                  <Link to="/login">Login</Link>
+                  {token ? (
+                    <Link to="/profile">Profile</Link>
+                  ) : (
+                    <Link to="/login">Login</Link>
+                  )}
                 </ListGroupItem>
 
                 <ListGroupItem className="p-0 border-0 mb-3">

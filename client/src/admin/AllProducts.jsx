@@ -1,59 +1,46 @@
 import { Container, Row, Col } from "reactstrap";
-import useGetData from "../hooks/useGetData";
 import { useEffect, useState } from "react";
+import "../styles/admin-nav.css";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { setProduct } from "../redux/slices/updateProduct";
 import { useNavigate } from "react-router-dom";
+import useFilterProducts from "../hooks/useFilterProducts";
+import Skeleton from "react-loading-skeleton";
 
 const AllProducts = ({ searchValue }) => {
-  const { data: productsData, loading } = useGetData(
-    "https://multimart-ecommerce-hr2c.onrender.com/api/products/all-products"
-  );
-  const [data, setData] = useState(productsData);
+  const { fetchProducts } = useFilterProducts();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setData(
-      productsData.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-    );
-  }, [productsData]);
+    setLoading(true);
+    let timeout;
+    timeout = setTimeout(async () => {
+      const data = await fetchProducts(searchValue);
+      setData([...data]);
+      setLoading(false);
+    }, 1000);
 
-  useEffect(() => {
-    if (searchValue) {
-      const searchResult = productsData.filter((pro) => {
-        return pro.productName
-          .toLowerCase()
-          .includes(searchValue.toLowerCase());
-      });
-
-      setData(searchResult);
-    } else {
-      setData(productsData);
-    }
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [searchValue]);
 
   const handleDelete = async (id) => {
-    await axios.delete(
-      `https://multimart-ecommerce-hr2c.onrender.com/api/products/${id}`
-    );
-    toast.success("product is deleted successfully");
-    window.location.reload();
+    try {
+      await axios.delete(`/api/products/${id}`);
+      toast.success("product is deleted successfully");
+      setData((prev) => prev.filter((p) => p._id !== id));
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
   };
 
-  const handleEdit = async (id) => {
-    try {
-      const { data } = await axios.get(
-        `https://multimart-ecommerce-hr2c.onrender.com/api/products/${id}`
-      );
-      navigate("/dashboard/add-product");
-      dispatch(setProduct(data.data));
-    } catch (error) {
-      console.log("kxfkdk");
-    }
+  const handleEdit = (id) => {
+    navigate(`/dashboard/edit-product/${id}`);
   };
 
   return (
@@ -62,7 +49,18 @@ const AllProducts = ({ searchValue }) => {
         <Row>
           <Col lg="12" md="12" sm="6" className="text-center ">
             {loading ? (
-              <h2 className="text-center">Loading....</h2>
+              [...Array(7)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className=" d-flex justify-content-between  align-items-center mb-3"
+                >
+                  <Skeleton width={80} height={80} className=" mx-5 " />
+                  <Skeleton width={200} />
+                  <Skeleton width={200} />
+                  <Skeleton width={100} />
+                  <Skeleton width={80} className=" mx-5 " />
+                </div>
+              ))
             ) : (
               <>
                 {data.length > 0 ? (
@@ -79,24 +77,28 @@ const AllProducts = ({ searchValue }) => {
                       </thead>
 
                       <tbody>
-                        {data.map((doc, index) => (
+                        {data.map((product, index) => (
                           <tr key={index}>
                             <td>
-                              <img src={doc.imgUrl} alt="" />
+                              <img
+                                src={product.imgUrl}
+                                className="product__image"
+                                alt={product.productName}
+                              />
                             </td>
-                            <td>{doc.productName}</td>
-                            <td>{doc.category}</td>
-                            <td>${doc.price}</td>
+                            <td>{product.productName}</td>
+                            <td>{product.category}</td>
+                            <td>${product.price}</td>
                             <td>
                               <div className=" d-flex align-items-center justify-content-center gap-1 ">
                                 <button
-                                  onClick={() => handleEdit(doc._id)}
+                                  onClick={() => handleEdit(product._id)}
                                   className="btn btn-primary rounded-5 "
                                 >
                                   <i className="ri-edit-line"></i>
                                 </button>
                                 <button
-                                  onClick={() => handleDelete(doc._id)}
+                                  onClick={() => handleDelete(product._id)}
                                   className="btn btn-danger rounded-5 "
                                 >
                                   <i className="ri-delete-bin-line"></i>

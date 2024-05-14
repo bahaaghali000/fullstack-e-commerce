@@ -1,116 +1,45 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Col, Container, Row, Form, FormGroup } from "reactstrap";
 import "../styles/add-product.css";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import { useDispatch, useSelector } from "react-redux";
 import { convertToBase64 } from "../utils";
-import { setProduct } from "../redux/slices/updateProduct";
+import useAddProduct from "../hooks/useAddProduct";
 
-const AddProducts = ({ mood }) => {
-  const { prodcutToUpdate } = useSelector((state) => state.product);
-
+const AddProducts = () => {
   const [enterTitle, setEnterTitle] = useState("");
   const [enterShortDesc, setEnterShortDesc] = useState("");
   const [enterDescription, setEnterDescription] = useState("");
   const [enterCategory, setEnterCategory] = useState("");
   const [enterPrice, setEnterPrice] = useState("");
   const [enterProductImage, setEnterProductImage] = useState(null);
-  const dispatch = useDispatch();
-  const { currentUser, loading } = useAuth();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const { loading, addProduct } = useAddProduct();
 
-  const navigate = useNavigate();
-
-  // still working on it
-  useEffect(() => {
-    if (prodcutToUpdate) {
-      setEnterTitle(prodcutToUpdate.productName);
-      setEnterShortDesc(prodcutToUpdate.shortDesc);
-      setEnterDescription(prodcutToUpdate.description);
-      setEnterPrice(prodcutToUpdate.price);
-      setEnterCategory(prodcutToUpdate.category);
-    }
-
-    return () => {
-      dispatch(setProduct(""));
-    };
-  }, [prodcutToUpdate]);
-
-  const addProduct = async (e) => {
+  const handleAddProduct = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    const config = {
-      headers: {
-        Authorization: "Bearer " + currentUser.token,
-      },
+    const product = {
+      category: enterCategory,
+      description: enterDescription,
+      photoBase64: await convertToBase64(enterProductImage),
+      price: enterPrice,
+      productName: enterTitle,
+      shortDesc: enterShortDesc,
     };
-
-    try {
-      if (!loading) {
-        if (!prodcutToUpdate) {
-          await axios.post(
-            "https://multimart-ecommerce-hr2c.onrender.com/api/products/create-product",
-            {
-              category: enterCategory,
-              description: enterDescription,
-              photoBase64: await convertToBase64(enterProductImage),
-              price: enterPrice,
-              productName: enterTitle,
-              shortDesc: enterShortDesc,
-            },
-            config
-          );
-          toast.success("product uploaded successfully");
-          navigate("/dashboard/all-products");
-          setIsLoading(false);
-        } else {
-          console.log("this condition 2");
-          await axios.put(
-            `https://multimart-ecommerce-hr2c.onrender.com/api/products/${prodcutToUpdate._id}`,
-            {
-              category: enterCategory,
-              description: enterDescription,
-              photoBase64: enterProductImage
-                ? await convertToBase64(enterProductImage)
-                : null,
-              price: enterPrice,
-              productName: enterTitle,
-              shortDesc: enterShortDesc,
-            },
-            config
-          );
-          toast.success("product updated successfully");
-          navigate("/dashboard/all-products");
-          setIsLoading(false);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went Wrong");
-      setIsLoading(false);
-    }
+    await addProduct(product);
   };
-
-  console.log(prodcutToUpdate._id);
 
   return (
     <section className="add__product">
       <Container>
         <Row>
           <Col lg="12">
-            {isLoading ? (
+            {loading ? (
               <div className="process__bar">
                 <h5 className="text-center">Uploading...</h5>
               </div>
             ) : (
               <>
                 <h4 className="mb-4">Add Product</h4>
-                <Form onSubmit={addProduct}>
+                <Form onSubmit={handleAddProduct}>
                   <span className="text-danger">Product Title</span>
                   <FormGroup className="form__group">
                     <input
@@ -144,7 +73,7 @@ const AddProducts = ({ mood }) => {
                     />
                   </FormGroup>
 
-                  <div className="d-flex align-items-center justify-content-between gap-5">
+                  <div className="d-flex align-items-center justify-content-between gap-3">
                     <div className="w-50">
                       <span className="text-danger">Price</span>
                       <FormGroup className="form__group">
@@ -181,13 +110,12 @@ const AddProducts = ({ mood }) => {
                   <FormGroup className="form__group">
                     <input
                       type="file"
-                      required={prodcutToUpdate ? false : true}
+                      accept="image/*"
+                      required
                       onChange={(e) => setEnterProductImage(e.target.files[0])}
                     />
                   </FormGroup>
-                  <button className="buy__btn">
-                    {prodcutToUpdate ? "Edit" : "Add"} Product
-                  </button>
+                  <button className="buy__btn">Add Product</button>
                 </Form>
               </>
             )}

@@ -1,10 +1,11 @@
 import Header from "../Header/Header";
+import "../../App.css";
 import Footer from "../Footer/Footer";
 import Routers from "../../routers/Routers";
-
 import { useLocation } from "react-router-dom";
 import AdminNav from "../../admin/AdminNav";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import LoadingPage from "../UI/LoadingPage";
 
 const Layout = () => {
   const location = useLocation();
@@ -16,7 +17,7 @@ const Layout = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  }, [location.pathname]);
 
   return (
     <>
@@ -26,9 +27,11 @@ const Layout = () => {
         <Header />
       )}
 
-      <main>
-        <Routers searchValue={search} />
-      </main>
+      <Suspense fallback={<LoadingPage />}>
+        <main>
+          <Routers searchValue={search} />
+        </main>
+      </Suspense>
 
       <Footer />
     </>
