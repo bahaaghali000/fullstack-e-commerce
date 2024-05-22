@@ -10,7 +10,7 @@ const favoriteRoute = require("./routes/favorite.route");
 const ratingRoute = require("./routes/rating.route");
 const cartRoute = require("./routes/cart.route");
 const cloudinary = require("cloudinary").v2;
-const passportSetup = require("./passport");
+require("./passport");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const session = require("express-session");
@@ -36,8 +36,8 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      sameSite: "none",
-      secure: process.env.COOKIE_SECURE,
+      sameSite: process.env.SAME_SITE_TYPE_SESSION,
+      // secure: process.env.COOKIE_SECURE,
     },
   })
 );

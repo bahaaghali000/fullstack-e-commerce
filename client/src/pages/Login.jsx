@@ -66,7 +66,7 @@ const Login = () => {
                   <Link to="/forgot-password">Forgot Password?</Link>
                 </div>
 
-                {/* <FormGroup>
+                <FormGroup>
                   <button
                     type="button"
                     onClick={signInWithGoogle}
@@ -78,7 +78,7 @@ const Login = () => {
                     />{" "}
                     Sign in With Google
                   </button>
-                </FormGroup> */}
+                </FormGroup>
                 <button className="buy__btn auth__btn mb-3 mt-2 ">Login</button>
                 <p>
                   Don't have an account?

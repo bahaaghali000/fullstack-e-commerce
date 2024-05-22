@@ -57,7 +57,7 @@ const Shop = () => {
               <select onChange={(e) => setSorting(e.target.value)}>
                 <option value="none">Sort By</option>
                 <option value="ascending">Ascending</option>
-                <option value="p">Descending</option>
+                <option value="descending">Descending</option>
               </select>
             </Col>
 

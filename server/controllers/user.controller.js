@@ -28,7 +28,7 @@ const createUser = asyncErrorHandler(async (req, res) => {
   const token = generateToken(newUser._id);
 
   res.cookie("access_token", token, {
-    sameSite: 'none',
+    sameSite: process.env.SAME_SITE_TYPE_COOKIE,
     maxAge: process.env.COOKIE_MAXAGE,
     secure: process.env.COOKIE_SECURE,
     httpOnly: true,
@@ -63,7 +63,7 @@ const login = asyncErrorHandler(async (req, res) => {
   if (user && decodedPassword) {
     user.password = undefined;
     res.cookie("access_token", token, {
-      sameSite: 'none',
+      sameSite: process.env.SAME_SITE_TYPE_COOKIE,
       maxAge: process.env.COOKIE_MAXAGE,
       secure: process.env.COOKIE_SECURE,
       httpOnly: true,
@@ -259,6 +259,22 @@ const restPassword = asyncErrorHandler(async (req, res) => {
   });
 });
 
+const checkUsernameExsit = asyncErrorHandler(async (req, res) => {
+  const { username } = req.body;
+
+  const isExist = await User.findOne({ username });
+
+  if (isExist) {
+    return res
+      .status(400)
+      .json({ status: "fail", message: "This Useranme is already Exsit" });
+  }
+
+  return res
+    .status(200)
+    .json({ status: "success", message: "You can use this username" });
+});
+
 module.exports = {
   createUser,
   login,
@@ -269,4 +285,5 @@ module.exports = {
   verifyCode,
   restPassword,
   getProfile,
+  checkUsernameExsit,
 };

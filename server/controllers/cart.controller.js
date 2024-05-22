@@ -31,7 +31,9 @@ const addToCart = asyncErrorHandler(async (req, res) => {
 
   if (cart) {
     // check if the product already exsit
-    let item = cart.items.find((item) => item.product === productId);
+    let item = cart.items.find(
+      (item) => item.product.toString() === product._id.toString()
+    );
 
     if (!item) {
       cart.items.push({

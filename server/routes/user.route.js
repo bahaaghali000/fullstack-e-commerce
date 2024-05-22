@@ -9,6 +9,7 @@ const {
   verifyCode,
   restPassword,
   getProfile,
+  checkUsernameExsit,
 } = require("../controllers/user.controller");
 const protect = require("../middlewares/auth.middleware");
 
@@ -19,6 +20,7 @@ router.route("/login").post(login);
 router.route("/profile").get(protect, getProfile);
 router.route("/all-users").get(protect, getAllUsers);
 router.route("/:userId").put(updateUser).delete(protect, deleteUser);
+router.route("/check").post(protect, checkUsernameExsit);
 
 router.route("/forget-password").post(forgetPassword);
 router.route("/verify-code").post(verifyCode);

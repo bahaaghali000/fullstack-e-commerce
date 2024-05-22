@@ -58,9 +58,9 @@ const getAllProducts = asyncErrorHandler(async (req, res) => {
 
   if (req.query.sorting !== undefined) {
     if (req.query.sorting === "ascending") {
-      sort.price = "asc";
+      sort.price = 1;
     } else if (req.query.sorting === "descending") {
-      sort.price = "desc";
+      sort.price = -1;
     } else {
       sort = {};
     }

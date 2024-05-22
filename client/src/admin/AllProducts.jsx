@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import useFilterProducts from "../hooks/useFilterProducts";
 import Skeleton from "react-loading-skeleton";
+import Helmet from "../Components/Helmet/Helmet";
 
 const AllProducts = ({ searchValue }) => {
   const { fetchProducts } = useFilterProducts();
@@ -44,83 +45,85 @@ const AllProducts = ({ searchValue }) => {
   };
 
   return (
-    <section className="all__products">
-      <Container>
-        <Row>
-          <Col lg="12" md="12" sm="6" className="text-center ">
-            {loading ? (
-              [...Array(7)].map((_, idx) => (
-                <div
-                  key={idx}
-                  className=" d-flex justify-content-between  align-items-center mb-3"
-                >
-                  <Skeleton width={80} height={80} className=" mx-5 " />
-                  <Skeleton width={200} />
-                  <Skeleton width={200} />
-                  <Skeleton width={100} />
-                  <Skeleton width={80} className=" mx-5 " />
-                </div>
-              ))
-            ) : (
-              <>
-                {data.length > 0 ? (
-                  <>
-                    <table className="table bordered">
-                      <thead>
-                        <tr>
-                          <th>Image</th>
-                          <th>Title</th>
-                          <th>Category</th>
-                          <th>Price</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {data.map((product, index) => (
-                          <tr key={index}>
-                            <td>
-                              <img
-                                src={product.imgUrl}
-                                className="product__image"
-                                alt={product.productName}
-                              />
-                            </td>
-                            <td>{product.productName}</td>
-                            <td>{product.category}</td>
-                            <td>${product.price}</td>
-                            <td>
-                              <div className=" d-flex align-items-center justify-content-center gap-1 ">
-                                <button
-                                  onClick={() => handleEdit(product._id)}
-                                  className="btn btn-primary rounded-5 "
-                                >
-                                  <i className="ri-edit-line"></i>
-                                </button>
-                                <button
-                                  onClick={() => handleDelete(product._id)}
-                                  className="btn btn-danger rounded-5 "
-                                >
-                                  <i className="ri-delete-bin-line"></i>
-                                </button>
-                              </div>
-                            </td>
+    <Helmet title="All Products">
+      <section className="all__products">
+        <Container>
+          <Row>
+            <Col lg="12" md="12" sm="6" className="text-center ">
+              {loading ? (
+                [...Array(7)].map((_, idx) => (
+                  <div
+                    key={idx}
+                    className=" d-flex justify-content-between  align-items-center mb-3"
+                  >
+                    <Skeleton width={80} height={80} className=" mx-5 " />
+                    <Skeleton width={200} />
+                    <Skeleton width={200} />
+                    <Skeleton width={100} />
+                    <Skeleton width={80} className=" mx-5 " />
+                  </div>
+                ))
+              ) : (
+                <>
+                  {data.length > 0 ? (
+                    <>
+                      <table className="table bordered">
+                        <thead>
+                          <tr>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Action</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </>
-                ) : (
-                  <h6 className="text-center fw-bold">
-                    No Products exsited yet
-                  </h6>
-                )}
-              </>
-            )}
-          </Col>
-        </Row>
-      </Container>
-    </section>
+                        </thead>
+
+                        <tbody>
+                          {data.map((product, index) => (
+                            <tr key={index}>
+                              <td>
+                                <img
+                                  src={product.imgUrl}
+                                  className="product__image"
+                                  alt={product.productName}
+                                />
+                              </td>
+                              <td>{product.productName}</td>
+                              <td>{product.category}</td>
+                              <td>${product.price}</td>
+                              <td>
+                                <div className=" d-flex align-items-center justify-content-center gap-1 ">
+                                  <button
+                                    onClick={() => handleEdit(product._id)}
+                                    className="btn btn-primary rounded-5 "
+                                  >
+                                    <i className="ri-edit-line"></i>
+                                  </button>
+                                  <button
+                                    onClick={() => handleDelete(product._id)}
+                                    className="btn btn-danger rounded-5 "
+                                  >
+                                    <i className="ri-delete-bin-line"></i>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  ) : (
+                    <h6 className="text-center fw-bold">
+                      No Products exsited yet
+                    </h6>
+                  )}
+                </>
+              )}
+            </Col>
+          </Row>
+        </Container>
+      </section>
+    </Helmet>
   );
 };
 

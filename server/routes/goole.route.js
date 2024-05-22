@@ -53,7 +53,7 @@ router.get("/login/success", async (req, res) => {
     const token = generateToken(exsitUser._id);
 
     res.cookie("access_token", token, {
-      sameSite: "none",
+      sameSite: process.env.SAME_SITE_TYPE_COOKIE,
       maxAge: process.env.COOKIE_MAXAGE,
       secure: process.env.COOKIE_SECURE,
       httpOnly: true,
@@ -79,7 +79,7 @@ router.get("/login/success", async (req, res) => {
   const token = generateToken(user._id);
 
   res.cookie("access_token", token, {
-    sameSite: "none",
+    sameSite: process.env.SAME_SITE_TYPE_COOKIE,
     maxAge: process.env.COOKIE_MAXAGE,
     secure: process.env.COOKIE_SECURE,
     httpOnly: true,

@@ -20,6 +20,8 @@ const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  console.log(cartItems);
+
   const { handleRemove } = useRemoveFromCart();
 
   const hanleDelete = async (id) => {

@@ -9,7 +9,7 @@ passport.use(
       callbackURL: "/auth/google/callback",
     },
     function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
+      return done(null, profile);
     }
   )
 );
