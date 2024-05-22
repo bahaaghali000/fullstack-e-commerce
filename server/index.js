@@ -37,7 +37,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       sameSite: process.env.SAME_SITE_TYPE_SESSION,
-      // secure: process.env.COOKIE_SECURE,
+      secure: process.env.COOKIE_SECURE,
     },
   })
 );
