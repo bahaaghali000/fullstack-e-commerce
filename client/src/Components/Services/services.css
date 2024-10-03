@@ -1,0 +1,27 @@
+.service__item{
+    padding: 20px 15px;
+    background: var(--card-bg-01);
+    display: flex;
+    align-items: center;
+    column-gap: 0.7rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+.service__item span i {
+    font-size: 2.2rem;
+    background: var(--primary-color);
+    border-radius: 50%;
+    padding: 10px;
+    color: #fff;
+    font-weight: 400 !important;
+}
+.service__item h3{
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.service__item p{
+    font-size: 0.9rem;
+    color: #333;
+}

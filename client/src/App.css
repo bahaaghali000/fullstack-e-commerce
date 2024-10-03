@@ -1,0 +1,247 @@
+/* google fonts */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+
+/*  css variables */
+:root {
+  --card-bg-01: #fdefe6;
+  --card-bg-02: #adc3e4;
+  --card-bg-03: #ceebe9;
+  --card-bg-04: #e2f2b2;
+  --primary-color: #0a1d37;
+  --hero-bg: #d6e5fb;
+  --heading-fontSize: 2rem;
+  --small-text-color: #999;
+  --heading-text-color: #0a1d37;
+}
+
+/* reset browser default */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  padding: 0;
+  margin: 0;
+}
+
+p {
+  color: var(--small-text-color);
+  font-size: 1rem;
+}
+input,
+button,
+select,
+optgroup,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  outline: none;
+}
+h1,
+h2 {
+  font-size: var(--heading-fontSize);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none !important;
+  /* color: unset; */
+}
+img {
+  width: 100%;
+}
+section {
+  padding: 60px 0px;
+}
+.section__title {
+  color: var(--primary-color);
+  font-weight: 600 !important;
+}
+.search__box,
+.form__group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  overflow: hidden;
+  padding-left: 2px;
+  padding-right: 12px;
+}
+
+.auth__btn {
+  background-color: #fff !important;
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+input,
+.review__form textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 10px;
+}
+
+#root {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.buy__btn {
+  border: none;
+  outline: none;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 5px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  margin-top: 30px;
+  transition: 0.3s;
+}
+.buy__btn a {
+  color: #fff;
+}
+
+.outline__btn {
+  border: 1px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.outline__btn:hover {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.btn__disabled {
+  cursor: not-allowed;
+  background: #5776a0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slide-left {
+  -webkit-animation: slide-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: slide-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.loading__page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 999999999;
+}
+
+.category__author {
+  font-weight: 500;
+  position: relative;
+}
+.category__author:hover {
+  color: rgba(0, 0, 0, 0.5);
+}
+.category__author:hover > div {
+  display: flex;
+}
+.category__author > div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: absolute;
+  width: 250px;
+  z-index: 99;
+  border-radius: 7px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  display: none;
+}
+.category__author img {
+  width: 50px;
+  height: 50px;
+}
+.category__author > div h4 {
+  font-size: 17px;
+  color: rgba(0, 0, 0, 0.8);
+}
+.category__author > div p {
+  font-size: 14px;
+}
+
+.pagination {
+  justify-content: center;
+  --bs-pagination-hover-color: var(--primary-color) !important;
+  --bs-pagination-active-bg: var(--primary-color) !important;
+  --bs-pagination-active-border-color: var(--bs-border-color) !important;
+}
+
+.auth__form {
+  background: var(--primary-color);
+  padding: 40px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+}
+.auth__form input {
+  width: 100%;
+  font-size: 1rem;
+}
+
+@-webkit-keyframes slide-left {
+  0% {
+    -webkit-transform: translateX(150px);
+    transform: translateX(150px);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+@keyframes slide-left {
+  0% {
+    -webkit-transform: translateX(150px);
+    transform: translateX(150px);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .buy__btn {
+    margin-top: 10px;
+  }
+  .buy__btn {
+    font-size: 0.9rem;
+  }
+}

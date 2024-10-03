@@ -1,0 +1,47 @@
+.shop select {
+  padding: 8px 20px;
+  border: 1px solid var(--primary-color);
+  cursor: pointer;
+  border-radius: 5px;
+  background: var(--primary-color);
+  color: #fff !important;
+  text-indent: 0rem;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+.shop select:focus {
+  outline: none !important;
+}
+.shop select option {
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: var(--primary-color) !important;
+}
+
+.search__box input {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 10px;
+}
+
+.search__box span {
+  color: var(--primary-color);
+  position: relative !important;
+  right: 0 !important;
+}
+
+@media screen and (max-width: 640px) {
+  .shop .container .row > div:first-child,
+  .shop .container .row > div:nth-child(2) {
+    width: 40%;
+    margin: 0 auto;
+  }
+  .search__box {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .header {
+    padding: 0 10px;
+  }
+}

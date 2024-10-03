@@ -1,0 +1,12 @@
+.common__section{
+    background: linear-gradient(#0000008a, #0000008a), url("../assets/images/tamanna-rumee-eD1RNYzzUxc-unsplash.jpg") no-repeat center center;
+    background-size: cover;
+    padding: 100px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.common__section h1{
+    color: #fff;
+    font-weight: 600;
+}

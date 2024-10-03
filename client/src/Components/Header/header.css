@@ -1,0 +1,172 @@
+header {
+  width: 100%;
+  height: 70px;
+  line-height: 70px;
+}
+.nav__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo a {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  cursor: pointer;
+}
+.logo img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.logo h1 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+.logo p {
+  line-height: 10px;
+}
+.menu__links {
+  display: flex;
+  align-items: center;
+  column-gap: 2.7rem;
+  margin-bottom: 0;
+}
+.nav__item a {
+  font-weight: 500;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+.nav__icons {
+  display: flex;
+  column-gap: 1.2rem;
+}
+.profile img {
+  margin-top: -3px;
+}
+.fav__icon,
+.cart__icon {
+  position: relative;
+}
+.badge {
+  position: absolute;
+  top: 25%;
+  right: -5%;
+  width: 15px;
+  height: 15px;
+  content: "";
+  background-color: var(--primary-color);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.7rem !important;
+  border-radius: 50px !important;
+  font-weight: 600;
+  z-index: 10;
+  cursor: pointer;
+}
+.nav__icons span i {
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+
+.profile__picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+.nav__icons .profile {
+  position: relative;
+  z-index: 9;
+}
+.profile__actions {
+  position: absolute;
+  top: 99%;
+  left: -80px;
+  width: 120px;
+  padding: 15px;
+  z-index: 10;
+  background: var(--card-bg-01);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.show__profile-actions {
+  display: block !important;
+}
+
+.mobile__menu {
+  display: none;
+  font-size: 1.3rem;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+.nav_active {
+  font-weight: 700 !important;
+}
+.sticky__header {
+  width: 100%;
+  height: 70px;
+  line-height: 70px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  box-shadow: 3px 3px 8px -3px #ddd;
+  background: #fff;
+}
+
+@media screen and (max-width: 768px) {
+  .navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000be;
+    z-index: 999;
+    display: none;
+  }
+  .menu__links {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background: #fff;
+    z-index: 99999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .active__menu {
+    display: block;
+  }
+  .mobile__menu {
+    display: block;
+  }
+  .logo h1 {
+    font-size: 1rem;
+  }
+  .logo p {
+    font-size: 0.7rem;
+  }
+  .fav__icon i,
+  .cart__icon i {
+    font-size: 1.2rem !important;
+  }
+  .header {
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 10px;
+    height: 60px;
+    line-height: 60px;
+  }
+}

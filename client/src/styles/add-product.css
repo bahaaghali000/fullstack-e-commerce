@@ -1,0 +1,59 @@
+.add__product .form__group{
+    border-color: var(--primary-color);
+}
+.add__product span{
+    font-weight: 500;
+}
+select{
+    border: none;
+    outline: none;
+}
+
+.process__bar{
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: #fff;
+}
+.process__bar-per{
+    font-size: 1.2em;
+    margin: 1em 0;
+    /* animation: text 2s ease; */
+}
+
+.process__bar-upload {
+  height: 20px;
+  background-color: #eee;
+  position: relative;
+  border-radius: 10px;
+}
+
+
+.process__bar-upload:after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    border-radius: 10px;
+    background-color: var(--primary-color);
+    /* animation: processbar-design 3s ease-out; */
+
+}
+
+/* 
+@keyframes text{
+    from{
+      transform: scale(0);
+    }
+    to{
+      transform: scale(1);
+    }
+} */
+
+/* @keyframes processbar-design{
+    from{
+      width: 0;
+    }
+    to{
+      width: 100%;
+    }
+} */

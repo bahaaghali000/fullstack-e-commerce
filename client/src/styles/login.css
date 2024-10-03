@@ -1,0 +1,24 @@
+
+.signup__google {
+  margin: 30px auto 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  padding: 10px;
+  gap: 10px;
+  cursor: pointer;
+  width: max-content;
+  text-align: center;
+  border-radius: 5px;
+  border: none;
+}
+
+.signup__google img {
+  width: 24px;
+  height: 24px;
+}
+
+.forgot_password {
+  text-align: right;
+}

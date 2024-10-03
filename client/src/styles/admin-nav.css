@@ -1,0 +1,113 @@
+.admin__header {
+  width: 100%;
+  background: var(--primary-color);
+  padding: 20px 0;
+  line-height: 0;
+}
+
+.admin__nav-top {
+  width: 100%;
+}
+
+.admin__nav-wrapper-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.admin__nav-top-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+}
+.admin__nav-wrapper-top .search__box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.search__box span {
+  color: var(--primary-color);
+  position: absolute;
+  right: 20px;
+}
+
+.admin__header .profile__actions {
+  margin-top: 1rem;
+}
+.admin__nav-top-right span i {
+  color: whitesmoke;
+  cursor: pointer;
+}
+
+.admin__nav-wrapper-top .logo h2 {
+  font-size: 1.2rem;
+  color: whitesmoke;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.admin__menu {
+  background: var(--card-bg-02);
+  padding: 0;
+  line-height: 70px;
+}
+.admin__menu-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2.7rem;
+}
+
+.admin__menu-list .admin__menu-item a {
+  font-weight: 500;
+  color: var(--primary-color);
+  border-radius: 7px;
+  padding: 10px 15px;
+}
+.active__admin-menu {
+  background: #fff;
+}
+.users__img {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.all__products .product__image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 992px) {
+  .admin__menu-list {
+    gap: 10px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .admin__header .search__box {
+    display: none !important;
+  }
+  .admin__nav-wrapper-top {
+    padding-right: 2rem;
+  }
+  .admin__menu-list .admin__menu-item a {
+    padding: 10px 8px;
+  }
+  .admin__menu-list {
+    padding-left: 0;
+  }
+}
+@media screen and (max-width: 525px) {
+  .all__products .table {
+    transform: scaleX(0.9);
+  }
+}
