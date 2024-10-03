@@ -7,6 +7,7 @@ import { Suspense, useEffect, useState } from "react";
 import LoadingPage from "../UI/LoadingPage";
 import ErrorBoundary from "../ErrorBoundary";
 import AdminNav from "../../admin/AdminNavBar/AdminNav";
+import SomethingWentWrong from "../../pages/SomethingWentWrong";
 
 const Layout = () => {
   const location = useLocation();
@@ -24,7 +25,7 @@ const Layout = () => {
         <Header />
       )}
 
-      <ErrorBoundary fallback={<p>Something Went Wrong</p>}>
+      <ErrorBoundary fallback={<SomethingWentWrong />}>
         <Suspense fallback={<LoadingPage />}>
           <main>
             <Routers searchValue={search} />

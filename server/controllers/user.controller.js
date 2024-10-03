@@ -28,7 +28,7 @@ const getAllUsers = asyncErrorHandler(async (req, res) => {
     $nor: [{ _id: req.user._id }],
   });
 
-  const totalPages = Math.ceil(users.length / limit);
+  const totalPages = Math.ceil(totalUsers / limit);
 
   return res
     .status(200)

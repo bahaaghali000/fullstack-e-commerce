@@ -60,7 +60,7 @@ const getAllProducts = asyncErrorHandler(async (req, res, next) => {
 
   const count = await Product.countDocuments();
 
-  const pages = Math.ceil(products.length / limit);
+  const pages = Math.ceil(count / limit);
 
   res.status(200).json({
     status: "success",

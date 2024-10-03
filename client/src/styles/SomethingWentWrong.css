@@ -1,0 +1,66 @@
+.something__wentwrong {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-svg {
+  width: 50%;
+  max-width: 25rem;
+  color: #1e40af;
+}
+
+.error-text {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.error-code {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #4b5563;
+}
+
+.error-message {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4b5563;
+  margin-top: 0.5rem;
+}
+
+.error-details {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .error-code {
+    font-size: 4rem;
+  }
+
+  .error-message {
+    font-size: 2rem;
+  }
+
+  .error-details {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .error-code {
+    font-size: 5rem;
+  }
+
+  .error-message {
+    font-size: 2.5rem;
+  }
+
+  .error-details {
+    font-size: 1.5rem;
+  }
+}
