@@ -1,8 +1,7 @@
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row } from "reactstrap";
 import "./services.css";
-import { motion } from "framer-motion";
-
-import serviceData from "../../assets/data/serviceData";
+import serviceData from "../../constants/serviceData";
+import Service from "./Service";
 
 const Services = () => {
   return (
@@ -10,21 +9,7 @@ const Services = () => {
       <Container>
         <Row>
           {serviceData.map((service, index) => (
-            <Col lg="3" md="4" key={index}>
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                className="service__item"
-                style={{ background: service.bg }}
-              >
-                <span>
-                  <i className={service.icon}></i>
-                </span>
-                <div>
-                  <h3>{service.title}</h3>
-                  <p>{service.subtitle}</p>
-                </div>
-              </motion.div>
-            </Col>
+            <Service key={service.title + index} service={service} />
           ))}
         </Row>
       </Container>

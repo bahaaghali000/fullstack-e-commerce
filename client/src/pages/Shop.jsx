@@ -2,35 +2,60 @@ import { Col, Container, Row } from "reactstrap";
 import Helmet from "../Components/Helmet/Helmet";
 import CommonSection from "../Components/UI/CommonSection";
 import "../styles/shop.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ProductsList from "../Components/UI/ProductsList";
-import useFilterProducts from "../hooks/useFilterProducts";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../redux/slices/productsSlice";
 import ProductSkeleton from "../Components/skeletons/ProductSkeleton";
+import { useQuery } from "react-query";
+import SortingList from "../Components/Shop/SortingList";
+import Search from "../Components/UI/Search";
+import axios from "axios";
+import debounce from "lodash.debounce";
+import SelectCategory from "../Components/UI/SelectCategory";
+import Pagination from "../Components/UI/Pagination";
+
+const fetchProducts = async ({ queryKey }) => {
+  const [, sorting, search, filterValue, currentPage] = queryKey;
+  const { data } = await axios.get(
+    `/products?sort=${sorting}&search=${search.trim()}&page=${currentPage}&limit=20${
+      filterValue && `&category=${filterValue}`
+    }`
+  );
+  return data.data;
+};
 
 const Shop = () => {
   const [search, setSearch] = useState("");
   const [filterValue, setFilterValue] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState([]);
   const [sorting, setSorting] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { fetchProducts } = useFilterProducts();
+  const { data, isLoading, isError, error } = useQuery(
+    ["products", sorting, search, filterValue, currentPage],
+    fetchProducts
+  );
+
+  const totalPages = data?.totalPages || 1;
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearch(value);
+    }, 300),
+    []
+  );
+
+  const handleSearchChange = (e) => {
+    debouncedSearch(e.target.value);
+  };
 
   useEffect(() => {
-    setLoading(true);
-    let timeout;
-    timeout = setTimeout(async () => {
-      const data = await fetchProducts(search, filterValue, sorting);
-      setLoading(false);
-      setProducts(data);
-    }, 1000);
+    window.scroll(0, 0);
+  }, [currentPage]);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [search, filterValue, sorting]);
+  if (isError) return <p>{error}</p>;
 
   return (
     <Helmet title="Shop">
@@ -38,57 +63,46 @@ const Shop = () => {
 
       <section className="shop">
         <Container>
-          <Row>
+          <Row className="mb-3">
             <Col lg="3" md="6" sm="6">
-              <select
-                onChange={(e) => setFilterValue(e.target.value)}
+              <SelectCategory
+                setValue={setFilterValue}
                 value={filterValue}
-              >
-                <option value="">Filter By Category</option>
-                <option value="sofa">Sofa</option>
-                <option value="mobile">Mobile</option>
-                <option value="chair">Chair</option>
-                <option value="watch">Watch</option>
-                <option value="wireless">Wireless</option>
-              </select>
+                defaultOption="Filter By Category"
+              />
             </Col>
 
             <Col lg="3" md="6" sm="6" className="text-end">
-              <select onChange={(e) => setSorting(e.target.value)}>
-                <option value="none">Sort By</option>
-                <option value="ascending">Ascending</option>
-                <option value="descending">Descending</option>
-              </select>
+              <SortingList setSorting={setSorting} />
             </Col>
 
             <Col lg="6" md="12" className="d-block">
-              <div className="search__box">
-                <input
-                  type="text"
-                  onChange={(e) => setSearch(e.target.value)}
-                  value={search}
-                  placeholder="Search...."
-                />
-                <span>
-                  <i className="ri-search-line"></i>
-                </span>
-              </div>
+              <Search setSearch={handleSearchChange} />
             </Col>
           </Row>
-        </Container>
-      </section>
 
-      <section>
-        <Container>
-          <Row className=" align-items-end ">
-            {loading ? (
+          <Row className=" align-items-end mb-3">
+            {isLoading ? (
               [...Array(10)].map((_, index) => <ProductSkeleton key={index} />)
-            ) : products?.length > 0 ? (
-              <ProductsList data={products} />
+            ) : data?.products?.length > 0 ? (
+              <ProductsList data={data?.products} />
             ) : (
               <h1 className="text-center fs-4">No Products Are Found</h1>
             )}
           </Row>
+          {/* <Row className="mt-5">
+            <Col lg="12" className="text-center">
+              <button className="btn btn-primary" onClick={loadMore}>
+                Load More
+              </button>
+            </Col>
+          </Row> */}
+
+          <Pagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
         </Container>
       </section>
     </Helmet>

@@ -1,49 +1,63 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState, useTransition } from "react";
 import { Col, Row } from "reactstrap";
 import AddRating from "./AddRating";
+import ProductTab from "./ProductTab";
+import { useQuery } from "react-query";
+
+const fetchRatings = async ({ queryKey }) => {
+  const [, productId] = queryKey;
+  const { data } = await axios.get(`/rating/${productId}`);
+
+  return data.data;
+};
 
 const ProductReviews = ({ productDescription, productId }) => {
-  const [isDesc, setIsDesc] = useState(true);
-  const [ratings, setRatings] = useState([]);
+  const [isPending, startTransition] = useTransition();
+  const [tab, setTab] = useState("desc");
 
-  useEffect(() => {
-    // get product ratings
-    axios
-      .get(`/api/rating/${productId}`)
-      .then(({ data }) => setRatings(data.data));
-  }, []);
+  const { data: ratings, isLoading } = useQuery(
+    ["ratings", productId],
+    fetchRatings
+  );
+
+  function selectTab(nextTab) {
+    startTransition(() => {
+      setTab(nextTab);
+    });
+  }
 
   return (
     <section>
       <Row>
         <Col lg="12">
           <div className="product__tabs">
-            <span
-              onClick={() => setIsDesc(true)}
-              className={isDesc ? "active" : ""}
+            <ProductTab
+              isActive={tab === "desc"}
+              onClick={() => selectTab("desc")}
             >
               Description
-            </span>
+            </ProductTab>
 
-            <span
-              onClick={() => setIsDesc(false)}
-              className={!isDesc ? "active" : ""}
+            <ProductTab
+              isActive={tab === "ratings"}
+              onClick={() => selectTab("ratings")}
             >
-              Reviews ({ratings.length > 0 ? ratings.length : 0})
-            </span>
+              Reviews ({ratings?.length || 0})
+            </ProductTab>
           </div>
-          <p>
-            {isDesc ? (
-              <p className="lh-md">{productDescription}</p>
-            ) : (
-              <AddRating
-                ratings={ratings}
-                setRatings={setRatings}
-                productId={productId}
-              />
-            )}
-          </p>
+
+          {(isPending || isLoading) && (
+            <p className="text-center">Loading...</p>
+          )}
+
+          {!isPending && tab === "desc" && (
+            <p className="lh-md">{productDescription}</p>
+          )}
+
+          {!isPending && tab === "ratings" && (
+            <AddRating ratings={ratings} productId={productId} />
+          )}
         </Col>
       </Row>
     </section>

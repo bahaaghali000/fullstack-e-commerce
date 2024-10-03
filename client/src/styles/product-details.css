@@ -1,8 +1,14 @@
 .product__image {
   max-width: 440px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 .product__info {
-  margin-top: 70px;
+  margin-top: 40px;
 }
 .product__info h2 {
   font-size: 1.8rem;

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchCart = createAsyncThunk("/cart/fetch", async () => {
-  const { data } = await axios.get(`/api/cart/get`);
+  const { data } = await axios.get(`/cart/get`);
   return data.data;
 });
 
@@ -20,11 +20,11 @@ const cartSlice = createSlice({
   reducers: {
     addItem: (state, action) => {
       const newItem = action.payload;
-      const exsitingItem = state.cartItems.find(
-        (item) => item.product._id === newItem._id
+      const existingItem = state.cartItems.find(
+        (item) => item.product._id.toString() === newItem._id.toString()
       );
 
-      if (!exsitingItem) {
+      if (!existingItem) {
         state.cartItems.push({
           product: {
             _id: newItem._id,
@@ -37,35 +37,29 @@ const cartSlice = createSlice({
         });
 
         state.totalQuantity++;
-        state.totalAmount = state.cartItems.reduce(
-          (total, item) => total + +item.product.price * +item.quantity,
-          0
-        );
+        state.totalAmount += newItem.price;
       } else {
-        exsitingItem.quantity++;
+        existingItem.quantity++;
 
-        state.totalAmount = state.cartItems.reduce(
-          (total, item) => total + +item.product.price * +item.quantity,
-          0
-        );
+        state.totalAmount += existingItem.product.price;
       }
     },
 
     deleteItem: (state, action) => {
       const id = action.payload;
+
       const existingItem = state.cartItems.find(
-        (item) => item.product._id === id
+        (item) => item.product._id.toString() === id.toString()
       );
+
       if (existingItem) {
         state.cartItems = state.cartItems.filter(
-          (item) => item.product._id !== id
+          (item) => item.product._id.toString() !== id.toString()
         );
-        state.totalQuantity = state.totalQuantity - 1;
 
-        state.totalAmount = state.cartItems.reduce(
-          (total, item) => total + +item.product.price * +item.quantity,
-          0
-        );
+        state.totalQuantity -= existingItem.quantity;
+
+        state.totalAmount -= existingItem.product.price * existingItem.quantity;
       }
     },
   },

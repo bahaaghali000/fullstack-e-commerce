@@ -12,23 +12,19 @@ const useLogin = () => {
 
   const dispatch = useDispatch();
 
-  const login = async (email, password) => {
+  const login = async (formData) => {
     const toastId = toast.loading("Loading...");
     setLoading(true);
     try {
-      const { data } = await axios.post(`/api/user/login`, {
-        email,
-        password,
-      });
+      const { data } = await axios.post(`/user/login`, formData);
 
       if (data.status === "fail") {
         return toast.warning(data.msg);
       }
-      dispatch(setLogin({ token: data.data.user._id, user: data.data.user }));
+      dispatch(setLogin({ user: data.data.user }));
       toast.success("Logged in successfully");
       navigate("/home");
     } catch (error) {
-      console.log(error);
       toast.error(error?.response?.data?.message);
     } finally {
       setLoading(false);

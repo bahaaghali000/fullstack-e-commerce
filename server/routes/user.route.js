@@ -1,29 +1,46 @@
 const express = require("express");
 const {
-  createUser,
-  login,
   getAllUsers,
   updateUser,
   deleteUser,
+  checkUsernameExsit,
+} = require("../controllers/user.controller");
+const {
+  createUser,
+  login,
   forgetPassword,
   verifyCode,
   restPassword,
   getProfile,
-  checkUsernameExsit,
-} = require("../controllers/user.controller");
+} = require("../controllers/auth.controller");
+const {
+  signupValidation,
+  loginValidation,
+  forgetPasswordValidation,
+  verifyCodeValidation,
+  updatePasswordValidation,
+} = require("../Validations/authSchema");
 const protect = require("../middlewares/auth.middleware");
+const restrictTo = require("../middlewares/restrictTo");
+const upload = require("../middlewares/storge");
 
 const router = express.Router();
 
-router.route("/register").post(createUser);
-router.route("/login").post(login);
+router.route("/").get(protect, getAllUsers);
+router.route("/register").post(signupValidation, createUser);
+router.route("/login").post(loginValidation, login);
 router.route("/profile").get(protect, getProfile);
-router.route("/all-users").get(protect, getAllUsers);
-router.route("/:userId").put(updateUser).delete(protect, deleteUser);
-router.route("/check").post(protect, checkUsernameExsit);
+router.route("/forget-password").post(forgetPasswordValidation, forgetPassword);
+router.route("/verify-code").post(verifyCodeValidation, verifyCode);
+router
+  .route("/rest-password/:restToken")
+  .patch(updatePasswordValidation, restPassword);
 
-router.route("/forget-password").post(forgetPassword);
-router.route("/verify-code").post(verifyCode);
-router.route("/rest-password/:restToken").patch(restPassword);
+router
+  .route("/:userId")
+  .patch(protect, upload.single("profilePicture"), updateUser)
+  .delete(protect, restrictTo("admin"), deleteUser);
+
+router.route("/check-username").get(protect, checkUsernameExsit);
 
 module.exports = router;

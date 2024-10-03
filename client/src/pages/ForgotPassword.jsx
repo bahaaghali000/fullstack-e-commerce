@@ -1,34 +1,47 @@
 import React, { useState } from "react";
 import Helmet from "../Components/Helmet/Helmet";
+import "../styles/login.css";
 import { Col, Container, Form, FormGroup, Row } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { ForgotPasswordSchema } from "../Validations/ForgotPasswordSchema";
+import FormInput from "../Components/UI/FormInput";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: zodResolver(ForgotPasswordSchema),
+  });
 
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+
+  const onSubmit = async (data) => {
+    const loadingToast = toast.loading("Loading...");
 
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/user/forget-password`,
-        {
-          email,
-        }
+      const { data: dataBack } = await axios.post(
+        `/user/forget-password`,
+        data
       );
 
-      if (data.status == "success") {
-        toast.success(data.message);
+      if (dataBack.status == "success") {
+        toast.success(dataBack.message);
         navigate("/verify-code");
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      console.log(error);
+      toast.error(error?.response?.dataBack?.message);
+    } finally {
+      toast.dismiss(loadingToast);
     }
   };
+
   return (
     <Helmet title="Forgot-Passowrd">
       <section>
@@ -36,17 +49,13 @@ const ForgotPassword = () => {
           <Row>
             <Col lg="7" className="m-auto text-center ">
               <h4 className="fw-bold mb-4">Forgot Password</h4>
-              <Form className="auth__form" onSubmit={handleSubmit}>
-                <FormGroup className="form__group p-0 mb-0">
-                  <input
-                    type="email"
-                    required
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </FormGroup>
-                <p className=" text-right">
+              <Form className="auth__form" onSubmit={handleSubmit(onSubmit)}>
+                <FormInput
+                  register={register("email")}
+                  error={errors.email?.message}
+                  placeholder="Enter your email"
+                />
+                <p className="text-start">
                   We Will Send Verfication Code To Your Email
                 </p>
 

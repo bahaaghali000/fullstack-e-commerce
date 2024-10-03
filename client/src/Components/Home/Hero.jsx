@@ -5,14 +5,15 @@ import { Link } from "react-router-dom";
 import heroImage from "../../assets/images/hero-img.png";
 
 const Hero = () => {
-  const year = new Date().getFullYear();
   return (
     <section className="hero__section">
       <Container>
         <Row>
           <Col lg="6" md="6">
             <div className="hero__content">
-              <p className="hero__subtitle">Treanding product in {year}</p>
+              <p className="hero__subtitle">
+                Treanding product in {new Date().getFullYear()}
+              </p>
               <h2>Make Your Interior More Minimalistic & Modern</h2>
               <p>
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quidem

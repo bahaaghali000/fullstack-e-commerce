@@ -11,17 +11,20 @@ const useUpdateProfile = () => {
 
   const dispatch = useDispatch();
 
-  const updateProfile = async (profile) => {
+  const updateProfile = async (formData) => {
     setLoading(true);
     const loadingToast = toast.loading("Loading...");
 
     try {
-      const { data } = await axios.put(`/api/user/${user._id}`, profile);
-      dispatch(setLogin({ token: data.data, user: data.data }));
+      const { data } = await axios.patch(`/user/${user._id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      dispatch(setLogin({ user: data.data }));
       toast.success("Profile is updated successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message);
-      console.log(error);
     } finally {
       setLoading(false);
       toast.dismiss(loadingToast);

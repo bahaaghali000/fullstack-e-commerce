@@ -1,11 +1,12 @@
 const Favorite = require("../models/favorite.model");
 const Product = require("../models/product.model");
+const AppError = require("../utils/AppError");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 
 const getFav = asyncErrorHandler(async (req, res) => {
   const fav = await Favorite.findOne({ userId: req.user._id }).populate({
     path: "items",
-    select: "-description -shortDesc",
+    select: "productName price imgUrl quantity",
   });
 
   if (!fav) {
@@ -22,18 +23,13 @@ const getFav = asyncErrorHandler(async (req, res) => {
   res.status(200).json({ status: "success", data: fav });
 });
 
-const addOrDeleteProduct = asyncErrorHandler(async (req, res) => {
+const addOrDeleteProduct = asyncErrorHandler(async (req, res, next) => {
   const { productId } = req.params;
 
   const fav = await Favorite.findOne({ userId: req.user._id });
   const product = await Product.findById(productId);
 
-  if (!product) {
-    return res.status(404).json({
-      status: "error",
-      message: "Product not found",
-    });
-  }
+  if (!product) return next(new AppError("Product not found", 404));
 
   if (fav) {
     const productIndex = fav.items.findIndex(
@@ -45,6 +41,7 @@ const addOrDeleteProduct = asyncErrorHandler(async (req, res) => {
       fav.items.push(product._id);
       fav.totalQuantity++;
       fav.totalAmount += +product.price;
+
       await fav.save();
 
       return res.status(200).json({
@@ -63,20 +60,20 @@ const addOrDeleteProduct = asyncErrorHandler(async (req, res) => {
         message: "Product removed from favorites successfully",
       });
     }
-  } else {
-    const newFav = new Favorite({
-      userId: req.user._id,
-      items: [product._id],
-      totalQuantity: 1,
-      totalAmount: +product.price,
-    });
-    await newFav.save();
-
-    return res.status(201).json({
-      status: "success",
-      message: "Product added to favorites successfully",
-    });
   }
+
+  const newFav = new Favorite({
+    userId: req.user._id,
+    items: [product._id],
+    totalQuantity: 1,
+    totalAmount: +product.price,
+  });
+  await newFav.save();
+
+  return res.status(201).json({
+    status: "success",
+    message: "Product added to favorites successfully",
+  });
 });
 
 module.exports = {

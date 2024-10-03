@@ -1,24 +1,24 @@
 import axios from "axios";
 import { useState } from "react";
+import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 const useAddRating = () => {
   const [loading, setLoading] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const submitRating = async (productId, reviewObject) => {
     setLoading(true);
 
     const loadingToast = toast.loading("Loading...");
     try {
-      const { data } = await axios.post(
-        `/api/rating/${productId}`,
-        reviewObject
-      );
-      toast.success("Your Rating Added Successfully");
+      const { data } = await axios.post(`/rating/${productId}`, reviewObject);
+      toast.success(data.message);
 
-      return data.data;
+      queryClient.invalidateQueries(["ratings", productId]);
+      queryClient.invalidateQueries(["product-details", productId]);
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);

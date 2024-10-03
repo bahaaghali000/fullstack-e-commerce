@@ -6,20 +6,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../../redux/slices/cartSlice";
 import useAddToCart from "../../hooks/useAddToCart";
 import { useState } from "react";
-import Model from "../Model/Model";
+import Model from "./Model";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const [showModel, setShowModel] = useState(false);
 
-  const { loading, addToCart } = useAddToCart();
+  const { addToCart } = useAddToCart();
 
-  const { token } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 
   const addProductToCart = async () => {
-    if (token) {
+    if (isAuthenticated) {
       await addToCart(product._id);
 
       dispatch(
@@ -55,32 +55,35 @@ const ProductCard = ({ product }) => {
     setShowModel(false);
   };
   return (
-    <div className="product__card mt-2">
+    <div className="product__card mt-2 overflow-hidden">
       <Link to={"/shop/" + product._id}>
         <div className="product__img">
           <motion.img
             whileHover={{ scale: 0.9 }}
-            src={product.imgUrl}
-            alt="Product Image"
+            src={`${import.meta.env.VITE_BACKEND_URL}/${product.imgUrl}`}
+            alt={product.productName}
           />
         </div>
 
         <div className="p-2 product__info">
-          <h3 className="product__name">{product.productName}</h3>
-          <p>{product.category}</p>
+          <h3 className="truncate">{product.productName}</h3>
+          {product?.category?.categoryName && (
+            <p>{product?.category?.categoryName}</p>
+          )}
         </div>
       </Link>
-      {showModel && (
-        <Model
-          handleClose={handleClose}
-          handleSubmit={handleSubmit}
-          showModel={showModel}
-          modalTitle="Alert"
-          modalDescription="You don't Logged in yet. your cart will gone after refresh the page. Log in to save your cart in our database"
-          cancelBtn="continue any way"
-          sumbitBtn="Log in"
-        />
-      )}
+
+      <Model
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        showModel={showModel}
+        modalTitle="Alert"
+        cancelBtnText="continue any way"
+        sumbitBtnText="Log in"
+      >
+        You don't Logged in yet. your cart will gone after refresh the page. Log
+        in to save your cart in our database
+      </Model>
 
       <div className="product__card-bottom d-flex align-items-center justify-content-between p-2">
         <span className="price">${product.price}</span>

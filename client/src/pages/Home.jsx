@@ -1,51 +1,29 @@
 import "../styles/home.css";
 import Helmet from "../Components/Helmet/Helmet";
 import Services from "../Components/Services/Services";
-import HomeProducts from "../Components/Home/HomeProducts";
 import TimerCount from "../Components/Home/TimerCount";
 import Hero from "../Components/Home/Hero";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchProducts } from "../redux/slices/productsSlice";
+import TrendingProducts from "../Components/Home/TrendingProducts";
+import BestSales from "../Components/Home/BestSales";
+import NewArrivals from "../Components/Home/NewArrivals";
+import PopularInCategory from "../Components/Home/PopularInCategory";
 
 const Home = () => {
-  const dipatch = useDispatch();
-
-  useEffect(() => {
-    dipatch(fetchProducts());
-  }, [dipatch]);
-
   return (
     <Helmet title={"Home"}>
       <Hero />
 
       <Services />
 
-      <HomeProducts
-        className="trending__products"
-        heading="Trending Products"
-        category="chair"
-      />
+      <TrendingProducts />
 
-      <HomeProducts
-        className="beat__sales"
-        heading="Best Sales"
-        category="sofa"
-      />
+      <BestSales />
 
       <TimerCount />
 
-      <HomeProducts
-        className="new__arrivals"
-        heading="New Arrivals"
-        category="mobile"
-      />
+      <NewArrivals />
 
-      <HomeProducts
-        className="popular__cateory"
-        heading="Popular in category"
-        category="watch"
-      />
+      <PopularInCategory />
     </Helmet>
   );
 };

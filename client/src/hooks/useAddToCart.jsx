@@ -10,10 +10,9 @@ const useAddToCart = () => {
     const loadingToast = toast.loading("Loading...");
 
     try {
-      await axios.get(`/api/cart/add/${productId}`);
+      await axios.get(`/cart/add/${productId}`);
       toast.success("Product is added to cart successfully");
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);

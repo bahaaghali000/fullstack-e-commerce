@@ -9,10 +9,10 @@ const useRemoveFromCart = () => {
     setLoading(true);
     const loadingToast = toast.loading("Loading...");
     try {
-      await axios.delete(`/api/cart/remove/${productId}`);
+      await axios.delete(`/cart/remove/${productId}`);
+
       toast.success("Product is removed from cart successfully");
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong");
     } finally {
       setLoading(false);

@@ -1,9 +1,9 @@
-import Spinner from "react-bootstrap/Spinner";
+import { Spinner } from "reactstrap";
 
 const LoadingPage = () => {
   return (
     <div className="loading__page">
-      <Spinner animation="grow" />
+      <Spinner color="light" />
     </div>
   );
 };

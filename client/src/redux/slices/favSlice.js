@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchFav = createAsyncThunk("/favorite/fetch", async () => {
-  const { data } = await axios.get(`/api/favorite`);
+  const { data } = await axios.get(`/favorite`);
   return data.data;
 });
 
@@ -20,30 +20,30 @@ const favSlice = createSlice({
   reducers: {
     addItemToFav: (state, action) => {
       const newItem = action.payload;
+
       const exsitingItem = state.favItems.find(
-        (item) => item._id === newItem._id
+        (item) => item._id.toString() === newItem._id.toString()
       );
 
       if (!exsitingItem) {
-        state.totalFav++;
         state.favItems.push(newItem);
+        state.totalFav++;
 
-        state.totalAmount = state.favItems.reduce(
-          (total, item) => total + +item.price,
-          0
-        );
+        state.totalAmount += newItem.price;
       }
     },
 
     deleteItemFromFav: (state, action) => {
       const id = action.payload;
+
       const existingItem = state.favItems.findIndex(
         (item) => item._id.toString() == id.toString()
       );
 
       if (existingItem > -1) {
+        state.favItems.splice(existingItem, 1);
+
         state.totalFav--;
-        state.favItems = state.favItems.filter((item) => item._id !== id);
 
         state.totalAmount = state.favItems.reduce(
           (total, item) => total + +item.price,

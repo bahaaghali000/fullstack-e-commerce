@@ -7,17 +7,23 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-      unique: [true, "username is already exsit"],
+      unique: [true, "username is already exsits"],
     },
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: [true, "This Email is already exsits"],
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
     password: {
       type: String,
       required: true,
       minlength: 8,
+      select: false,
     },
     profilePic: {
       type: String,
@@ -26,6 +32,7 @@ const userSchema = new mongoose.Schema(
     },
     bio: String,
     city: String,
+    country: String,
     phoneNumber: String,
     googleId: String,
 
@@ -42,15 +49,15 @@ const userSchema = new mongoose.Schema(
 
 // hashing password
 userSchema.pre("save", async function (next) {
-  if (!this.googleId) {
-    const salt = await bcrypt.genSaltSync(10);
-    let hashed = await bcrypt.hash(this.password, salt);
-
-    this.password = hashed;
-
-    next();
+  if (!this.googleId && this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 10);
   }
+  next();
 });
+
+userSchema.methods.comparePassword = async function (password, userPassword) {
+  return await bcrypt.compare(password, userPassword);
+};
 
 userSchema.methods.createRestToken = function () {
   const restToken = crypto.randomBytes(26).toString("hex");

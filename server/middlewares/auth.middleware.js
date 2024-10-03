@@ -1,23 +1,21 @@
 const jwt = require("jsonwebtoken");
-
 const User = require("../models/user.model");
-const asyncErrorHandler = require("../utils/asyncErrorHandler");
+const AppError = require("../utils/AppError");
 
-const protect = asyncErrorHandler(async (req, res, next) => {
+const protect = async (req, res, next) => {
   const token = req.cookies.access_token;
-  if (!token) {
-    return res.status(401).json({
-      status: "fail",
-      message: "Please Login to Access",
-    });
-  }
+
+  if (!token) return next(new AppError("Invalid authorization", 401));
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  // create user object in req object
-  req.user = await User.findById(decoded.id).select("-password");
+  const user = await User.findById(decoded.id);
+
+  if (!user) return next(new AppError("User not found", 404));
+
+  req.user = user;
 
   next();
-});
+};
 
 module.exports = protect;

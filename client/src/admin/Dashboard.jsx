@@ -1,56 +1,65 @@
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row } from "reactstrap";
 import "../styles/dashboard.css";
-import useGetUsers from "../hooks/useGetUsers";
-import useFilterProducts from "../hooks/useFilterProducts";
-import { useEffect, useState } from "react";
 import Helmet from "../Components/Helmet/Helmet";
+import Categories from "./Categories/Categories";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { convertToCurrency } from "../utils";
+import DashboardCardBox from "../Components/UI/DashboardCardBox";
+
+const fetchTotalProducts = async () => {
+  const { data } = await axios.get(`/products`);
+
+  return data.data.totalProducts;
+};
+
+const fetchTotalUsers = async () => {
+  const { data } = await axios.get(`/user`);
+
+  return data.data.totalUsers;
+};
 
 const Dashboard = () => {
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [totalUsers, setTotalUsers] = useState(0);
+  const { data: totalProducts, isLoading } = useQuery(
+    ["total-products"],
+    fetchTotalProducts
+  );
 
-  const { fetchUsers } = useGetUsers();
-  const { fetchProducts } = useFilterProducts();
-
-  useEffect(() => {
-    fetchUsers("").then((data) => setTotalUsers(data.length));
-    fetchProducts("", "").then((data) => setTotalProducts(data.length));
-  }, []);
-
-  const formatter = Intl.NumberFormat("en", {
-    notation: "compact",
-  });
+  const { data: totalUsers, isLoading: usersIsLoading } = useQuery(
+    ["total-users"],
+    fetchTotalUsers
+  );
 
   return (
     <Helmet title="Dashboard">
       <section>
         <Container>
           <Row>
-            <Col lg="3" md="6" sm="6" className=" mb-3">
-              <div className="revenue__box">
-                <h5>Total Sales</h5>
-                <span>${formatter.format(1232)}</span>
-              </div>
-            </Col>
-            <Col lg="3" md="6" sm="6" className=" mb-3">
-              <div className="order__box">
-                <h5>Orders</h5>
-                <span>345</span>
-              </div>
-            </Col>
-            <Col lg="3" md="6" sm="6" className=" mb-3">
-              <div className="products__box">
-                <h5>Total Products</h5>
-                <span>{totalProducts}</span>
-              </div>
-            </Col>
-            <Col lg="3" md="6" sm="6" className=" mb-3">
-              <div className="users__box">
-                <h5>Total Users</h5>
-                <span>{totalUsers}</span>
-              </div>
-            </Col>
+            <DashboardCardBox
+              className="revenue__box"
+              title="Total Sales"
+              value={convertToCurrency(1232, "USD")}
+            />
+
+            <DashboardCardBox
+              className="order__box"
+              title="Orders"
+              value="345"
+            />
+
+            <DashboardCardBox
+              className="products__box"
+              title="Total Products"
+              value={isLoading ? "Loading..." : totalProducts}
+            />
+
+            <DashboardCardBox
+              className="users__box"
+              title="Total Users"
+              value={usersIsLoading ? "Loading..." : totalUsers}
+            />
           </Row>
+          <Categories />
         </Container>
       </section>
     </Helmet>

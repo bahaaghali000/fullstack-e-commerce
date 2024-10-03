@@ -21,7 +21,6 @@ const sendEmail = (option) => {
     if (error) {
       return console.log(error);
     }
-    console.log("Message sent to: " + mailOptions.to);
   });
 };
 

@@ -122,6 +122,29 @@ input,
   color: #fff;
 }
 
+.outline__btn {
+  border: 1px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.outline__btn:hover {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.btn__disabled {
+  cursor: not-allowed;
+  background: #5776a0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .slide-left {
   -webkit-animation: slide-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: slide-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
@@ -138,6 +161,59 @@ input,
   min-height: 100vh;
   background: rgba(0, 0, 0, 0.95);
   z-index: 999999999;
+}
+
+.category__author {
+  font-weight: 500;
+  position: relative;
+}
+.category__author:hover {
+  color: rgba(0, 0, 0, 0.5);
+}
+.category__author:hover > div {
+  display: flex;
+}
+.category__author > div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: absolute;
+  width: 250px;
+  z-index: 99;
+  border-radius: 7px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  display: none;
+}
+.category__author img {
+  width: 50px;
+  height: 50px;
+}
+.category__author > div h4 {
+  font-size: 17px;
+  color: rgba(0, 0, 0, 0.8);
+}
+.category__author > div p {
+  font-size: 14px;
+}
+
+.pagination {
+  justify-content: center;
+  --bs-pagination-hover-color: var(--primary-color) !important;
+  --bs-pagination-active-bg: var(--primary-color) !important;
+  --bs-pagination-active-border-color: var(--bs-border-color) !important;
+}
+
+.auth__form {
+  background: var(--primary-color);
+  padding: 40px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+}
+.auth__form input {
+  width: 100%;
+  font-size: 1rem;
 }
 
 @-webkit-keyframes slide-left {

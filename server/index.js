@@ -9,7 +9,8 @@ const productsRoute = require("./routes/product.route");
 const favoriteRoute = require("./routes/favorite.route");
 const ratingRoute = require("./routes/rating.route");
 const cartRoute = require("./routes/cart.route");
-const cloudinary = require("cloudinary").v2;
+const categoryRoute = require("./routes/category.route");
+const paymentRoute = require("./routes/stripe.route");
 require("./passport");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
@@ -18,8 +19,8 @@ const session = require("express-session");
 const limiter = rateLimit({
   windowMs: process.env.LIMIT_TIME,
   limit: process.env.LIMIT_REQUESTS,
-  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  standardHeaders: "draft-7", 
+  legacyHeaders: false, 
   message: async (req, res) => {
     return "Too many requests, please try again later.";
   },
@@ -28,16 +29,23 @@ const limiter = rateLimit({
 
 const app = express();
 
-app.use(cookieParser());
+app.use(
+  cookieParser(process.env.COOKIE_SECRET, {
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    maxAge: process.env.COOKIE_MAXAGE,
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  })
+);
 
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
+    resave: true,
+    saveUninitialized: false,
     cookie: {
-      sameSite: process.env.SAME_SITE_TYPE_SESSION,
-      secure: process.env.COOKIE_SECURE,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      secure: process.env.NODE_ENV === "production",
     },
   })
 );
@@ -46,15 +54,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-cloudinary.config({
-  cloud_name: "dtvbuahbi",
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET_KEY,
-});
-
 // Apply the rate limiting middleware to all requests.
 app.use(limiter);
 app.use(express.json({ limit: Infinity }));
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
 app.use(
   cors({
     origin: process.env.FRONTEND_BASE_URL,
@@ -63,23 +67,36 @@ app.use(
   })
 );
 
-app.use("/api/user", usersRoute);
-app.use("/api/products", productsRoute);
-app.use("/api/cart", cartRoute);
-app.use("/api/favorite", favoriteRoute);
-app.use("/api/rating", ratingRoute);
+app.use("/api/v1/user", usersRoute);
+app.use("/api/v1/products", productsRoute);
+app.use("/api/v1/cart", cartRoute);
+app.use("/api/v1/favorite", favoriteRoute);
+app.use("/api/v1/rating", ratingRoute);
+app.use("/api/v1/category", categoryRoute);
+app.use("/api/v1/payment", paymentRoute);
 app.use("/auth", googleRoute);
 
 app.get("/", (req, res) => {
   res.send("Welcome to my app");
 });
 
-const main = async () => {
-  await mongoose.connect(process.env.MONGODB_URL);
-  console.log("server is connected");
-};
+app.use("*", (req, res) => {
+  res.send("Not Found");
+});
 
-main();
+// Global Error Handling Middleware
+app.use((err, req, res, next) => {
+  res.status(err?.statusCode).json({
+    message: err?.message,
+    statusCode: err?.statusCode,
+    status: err?.status,
+  });
+});
+
+(async () => {
+  await mongoose.connect(process.env.MONGODB_URL_LOCAL);
+  console.log("DB is connected");
+})();
 
 app.listen(process.env.PORT || 1000, () => {
   console.log("listening on port " + process.env.PORT);

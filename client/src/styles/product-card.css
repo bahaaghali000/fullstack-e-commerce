@@ -1,6 +1,13 @@
 .product__card{
     cursor: pointer;
 }
+
+.product__card .product__img img {
+    padding: 25px;
+    width: 100%;
+    object-fit: cover;
+}
+
 .product__info h3{
     font-size: 1.2rem ;
     color: var(--primary-color) ;

@@ -1,62 +1,71 @@
 const Product = require("../models/product.model");
 const Rating = require("../models/rating.model");
+const AppError = require("../utils/AppError");
 const asyncErrorHandler = require("../utils/asyncErrorHandler");
 
 const getRatings = asyncErrorHandler(async (req, res) => {
   const { productId } = req.params;
+
   const ratings = await Rating.find({ productId }).populate({
     path: "author",
-    select: "-password -bio -city -phoneNumber",
+    select: "username email profilePic",
   });
+
   return res.status(200).json({ status: "success", data: ratings });
 });
 
-const addRating = asyncErrorHandler(async (req, res) => {
+const addRating = asyncErrorHandler(async (req, res, next) => {
   const { productId } = req.params;
   const { rating, comment } = req.body;
 
   const product = await Product.findById(productId);
 
-  if (!product) {
-    return res
-      .status(404)
-      .json({ status: "fail", message: "Product not found" });
-  }
+  if (!product) return next(new AppError("Product not found", 404));
 
-  const newRating = new Rating({
+  await Rating.create({
     productId: product._id,
     author: req.user._id,
     rating,
     comment,
   });
-  const ratingForResponse = await newRating.save();
-  return res.status(200).json({
+
+  res.status(200).json({
     status: "success",
-    data: { ...ratingForResponse._doc, author: req.user },
+    message: "Your Rating Added Successfully",
   });
 });
 
-const updateRating = asyncErrorHandler(async (req, res) => {
-  const { productId } = req.params;
+const updateRating = asyncErrorHandler(async (req, res, next) => {
+  const { ratingId } = req.params;
 
-  const rating = await Rating.findOne({ productId, author: req.user._id });
+  const rating = await Rating.findOneAndUpdate(
+    { _id: ratingId, author: req.user._id },
+    req.body
+  );
 
-  if (!rating) {
-    return res.status(400).json({
-      status: "fail",
-      message: "You don't have permission to do that",
-    });
-  }
+  if (!rating)
+    return next(new AppError("You didn't have permission to do that", 400));
 
-  await Rating.findOneAndUpdate({ productId, author: req.user._id }, req.body);
+  res
+    .status(200)
+    .json({ status: "success", message: "Rating Updated Successfully" });
+});
+
+const removeRating = asyncErrorHandler(async (req, res, next) => {
+  const { ratingId } = req.params;
+
+  const rating = await Rating.findByIdAndDelete(ratingId);
+
+  if (!rating) return next(new AppError("Rating not found", 404));
 
   return res
     .status(200)
-    .json({ status: "success", message: "Updated Successfully" });
+    .json({ status: "success", message: "Rating deleted successfully" });
 });
 
 module.exports = {
   getRatings,
   addRating,
   updateRating,
+  removeRating,
 };

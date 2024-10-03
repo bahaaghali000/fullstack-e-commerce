@@ -27,13 +27,10 @@ const VerifyCode = () => {
 
   const verify = async () => {
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/user/verify-code`,
-        {
-          verificationCode:
-            values.value1 + values.value2 + values.value3 + values.value4,
-        }
-      );
+      const { data } = await axios.post(`/user/verify-code`, {
+        verificationCode:
+          values.value1 + values.value2 + values.value3 + values.value4,
+      });
 
       if (data.status === "success") {
         toast.success(data.message);
@@ -42,7 +39,6 @@ const VerifyCode = () => {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
-      console.log(error);
     } finally {
       resultRef.current.innerHTML = "fill all inputs";
       setValues({

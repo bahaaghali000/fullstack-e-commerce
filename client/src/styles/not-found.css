@@ -33,17 +33,6 @@
   justify-content: center;
 }
 
-.not-found .go__back {
-  border: 1px solid var(--primary-color);
-  background: transparent;
-  color: var(--primary-color);
-  font-weight: 600;
-}
-
-.not-found .go__back:hover {
-  background: var(--primary-color);
-  color: #fff;
-}
 
 @media screen and (max-width: 768px) {
   .not-found {

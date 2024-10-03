@@ -1,7 +1,8 @@
 # compiled output
-/dist
-/node_modules
-/build
+dist
+node_modules
+build
+.vscode
 
 # Logs
 logs
@@ -16,16 +17,17 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-/coverage
-/.nyc_output
+coverage
+.nyc_output
+returb
 
 # IDEs and editors
-/.idea
+.idea
 .project
 .classpath
 .c9/
 *.launch
-.settings/
+.settings
 *.sublime-workspace
 
 # IDE - VSCode
@@ -54,3 +56,4 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+old.js

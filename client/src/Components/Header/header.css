@@ -76,6 +76,7 @@ header {
   height: 30px;
   border-radius: 50%;
   cursor: pointer;
+  object-fit: cover;
 }
 
 .nav__icons .profile {

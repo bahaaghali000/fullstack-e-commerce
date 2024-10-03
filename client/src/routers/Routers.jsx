@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import {
   Home,
@@ -20,32 +20,38 @@ import {
   NotFound,
   EditProduct,
 } from "../pages";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Routers = ({ searchValue }) => {
-
- 
-
+  const { user } = useSelector((state) => state.auth);
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
 
       <Route path="/home" element={<Home />} />
-      <Route path="/shop" element={<Shop />} />
-      <Route path="/shop/:id" element={<ProductDetails />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/favorite" element={<Favorite />} />
+
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/verify-code" element={<VerifyCode />} />
       <Route path="/rest-password" element={<RestPassword />} />
 
+      <Route path="/shop">
+        <Route index element={<Shop />} />
+        <Route path=":id" element={<ProductDetails />} />
+      </Route>
+
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/favorite" element={<Favorite />} />
+
       <Route path="/" element={<ProtectedRoute />}>
         <Route path="checkout" element={<Checkout />} />
         <Route path="profile" element={<Profile />} />
 
-        <Route path="dashboard">
+        <Route
+          path="dashboard"
+          element={user.role === "admin" ? <Outlet /> : <NotFound />}
+        >
           <Route index element={<Dashboard />} />
           <Route
             path="all-products"

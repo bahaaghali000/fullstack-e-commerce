@@ -18,8 +18,8 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     category: {
-      type: String,
-      trim: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
     },
     price: {
@@ -28,7 +28,16 @@ const productSchema = new mongoose.Schema(
     },
     imgUrl: {
       type: String,
+      required: false,
+    },
+    views: {
+      type: Number,
+      default: 0,
+    },
+    quantity: {
+      type: Number,
       required: true,
+      min: [1, "Quantity must be at least 1."],
     },
   },
   {

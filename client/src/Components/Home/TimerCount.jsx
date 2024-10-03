@@ -15,7 +15,9 @@ const TimerCount = () => {
               <h4 className="text-white fs-6 mb-2">Limited Offers</h4>
               <h3 className="text-white fs-5 mb-3">Quality Armchair</h3>
             </div>
+
             <Clock />
+
             <motion.button
               whileTap={{ scale: 1.2 }}
               className="buy__btn store__btn"

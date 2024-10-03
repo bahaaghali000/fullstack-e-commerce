@@ -10,3 +10,12 @@ export const convertToBase64 = (file) => {
     };
   });
 };
+
+export const convertToCurrency = (price, currency) => {
+  let formater = new Intl.NumberFormat("en", {
+    style: "currency",
+    currency,
+  });
+
+  return formater.format(price);
+};

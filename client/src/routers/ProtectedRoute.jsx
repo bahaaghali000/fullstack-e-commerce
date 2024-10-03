@@ -3,9 +3,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import { NotFound } from "../pages";
 
 const ProtectedRoute = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
-  if (token) {
+  if (isAuthenticated) {
     return <Outlet />;
   }
   return <NotFound />;
